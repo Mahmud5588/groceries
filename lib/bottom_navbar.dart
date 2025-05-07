@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:groceries/core/const/colors/app_colors.dart';
 import 'package:groceries/core/const/strings/text_styles.dart';
 import 'package:groceries/features/home/presentation/pages/home.dart';
-import 'package:groceries/features/profile/profile_page.dart';
 
 import 'core/const/utils/app_responsive.dart';
 

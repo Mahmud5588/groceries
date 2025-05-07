@@ -76,51 +76,39 @@ class _SignUpPageState extends State<SignUpPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: AppResponsive.height(3)),
-                        const Text(AppStrings.welcomeBack, style: AppTextStyle.heading),
                         SizedBox(height: AppResponsive.height(1)),
-                        const Text(AppStrings.createYourAccount, style: AppTextStyle.caption),
                         SizedBox(height: AppResponsive.height(3)),
                         MyTextField(
                           texts: AppStrings.name,
-                          icon: const Icon(Icons.person),
-                          controller: _nameController,
                           keyboardType: TextInputType.name,
                         ),
                         SizedBox(height: AppResponsive.height(2)),
                         MyTextField(
-                          texts: AppStrings.phone,
-                          icon: const Icon(Icons.phone),
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
                         ),
                         SizedBox(height: AppResponsive.height(2)),
                         MyTextField(
-                          texts: AppStrings.email,
-                          icon: const Icon(Icons.email),
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
                         ),
                         SizedBox(height: AppResponsive.height(2)),
                         MyTextField(
                           texts: AppStrings.password,
-                          icon: const Icon(Icons.lock),
-                          controller: _passwordController,
                           obscureText: _obscurePassword,
-                          element: IconButton(
-                            icon: Icon(
-                              _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                              icon: Icon(
+                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
                           ),
-                        ),
                         SizedBox(height: AppResponsive.height(3)),
                         SizedBox(
                             width: double.infinity,
-                            height: AppResponsive.height(6),
                             child: ButtonWidget(text: AppStrings.signUp, onPressed: () {
                               Navigator.pushNamed(context, RouteNames.signUpPage);
                             })),
@@ -128,12 +116,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(AppStrings.alreadyHaveAccount),
                             TextButton(
                               onPressed: () {},
-                              child: const Text(
                                 AppStrings.signIn,
-                                style: TextStyle(color: Colors.black),
                               ),
                             ),
                           ],
@@ -150,4 +135,3 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
-

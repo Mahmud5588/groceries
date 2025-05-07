@@ -15,5 +15,8 @@ class RouteNames {
   static const String addCreditCardPage = '/addCreditCardPage';
   static const String transactionPage = '/transactionPage';
   static const String forgotPasswordPage = '/forgotPasswordPage';
+  static const String verifyNumberPage = '/verifyNumberPage';
+  static const String aboutMePage = '/aboutMePage';
+
 
 }

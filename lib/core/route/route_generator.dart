@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:groceries/bottom_navbar.dart';
 import 'package:groceries/core/route/route_names.dart';
 import 'package:groceries/features/authentication/presentation/pages/forgot_password/forgot_password.dart';
+import 'package:groceries/features/authentication/presentation/pages/forgot_password/verify_number_page.dart';
 import 'package:groceries/features/authentication/presentation/pages/sign_in/sign_in.dart';
 import 'package:groceries/features/authentication/presentation/pages/sign_up/sign_up.dart';
 import 'package:groceries/features/authentication/presentation/pages/splash_page/splash_page.dart';
@@ -9,12 +10,15 @@ import 'package:groceries/features/home/presentation/pages/category_page.dart';
 import 'package:groceries/features/home/presentation/pages/home.dart';
 import 'package:groceries/features/home/presentation/pages/product_page.dart';
 import 'package:groceries/features/home/presentation/pages/products_page.dart';
-import 'package:groceries/features/profile/add_creditcard.dart';
-import 'package:groceries/features/profile/address_page.dart';
-import 'package:groceries/features/profile/my_card_page.dart';
-import 'package:groceries/features/profile/notifications_page.dart';
-import 'package:groceries/features/profile/profile_page.dart';
-import 'package:groceries/features/profile/transaction_page.dart';
+import 'package:groceries/features/profile/presentation/pages/about_me_page.dart';
+
+import 'package:groceries/features/profile/presentation/pages/add_creditcard.dart';
+import 'package:groceries/features/profile/presentation/pages/address_page.dart';
+import 'package:groceries/features/profile/presentation/pages/my_card_page.dart';
+import 'package:groceries/features/profile/presentation/pages/notifications_page.dart';
+import 'package:groceries/features/profile/presentation/pages/profile_page.dart';
+import 'package:groceries/features/profile/presentation/pages/transaction_page.dart';
+
 
 class AppRoute {
   BuildContext context;
@@ -53,6 +57,10 @@ class AppRoute {
         return MaterialPageRoute(builder: (context) => TransactionsPage());
       case RouteNames.forgotPasswordPage:
         return MaterialPageRoute(builder: (context) => ForgotPassword());
+      case RouteNames.verifyNumberPage:
+        return MaterialPageRoute(builder: (context) => VerifyNumberPage());
+        case RouteNames.aboutMePage:
+        return MaterialPageRoute(builder: (context) => AboutMePage());
 
       default:
         return MaterialPageRoute(builder: (context) => Placeholder());
