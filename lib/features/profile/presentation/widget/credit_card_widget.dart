@@ -5,14 +5,14 @@ import 'package:groceries/core/const/utils/app_responsive.dart';
 
 
 class CreditCardWidget extends StatelessWidget {
-  final String cardType; // Masalan, "Master Card", "Visa Card"
-  final String lastFourDigits; // Kartaning oxirgi 4 ta raqami
+  final String cardType;
+  final String lastFourDigits;
   final String expiryDate;
   final String cvv;
-  final String? cardIconPath; // Karta turining ikonasi yo'li (Mastercard, Visa logosi)
-  final Color? iconBackgroundColor; // Ikona orqasidagi doira rangi
-  final bool isDefault; // Karta defaultmi yoki yo'q
-  final VoidCallback? onEdit; // Tahrirlash tugmasiga bosilganda
+  final String? cardIconPath;
+  final Color? iconBackgroundColor;
+  final bool isDefault;
+  final VoidCallback? onEdit;
 
   const CreditCardWidget({
     Key? key,
@@ -28,11 +28,14 @@ class CreditCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppResponsive.init(context);
+    final theme = Theme.of(context);
+
     return Container(
       padding: EdgeInsets.all(appWidth(4)),
-      margin: EdgeInsets.only(bottom: appHeight(2)), // Pastdan bo'shliq
+      margin: EdgeInsets.only(bottom: appHeight(2)),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -46,82 +49,82 @@ class CreditCardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (isDefault) // Agar default bo'lsa "DEFAULT" labelini ko'rsatish
+          if (isDefault)
             Padding(
               padding: EdgeInsets.only(bottom: appHeight(1)),
               child: Text(
                 'DEFAULT',
-                style: AppTextStyle.caption.copyWith(color: AppColors.primaryDark, fontWeight: FontWeight.bold),
+                style: AppTextStyle.caption.copyWith(color: theme.primaryColor, fontWeight: FontWeight.bold),
               ),
             ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Ikona doirasi
-              if (cardIconPath != null) // Agar ikona yo'li berilgan bo'lsa
+              if (cardIconPath != null)
                 Container(
                   width: appWidth(10),
                   height: appWidth(10),
                   decoration: BoxDecoration(
-                    color: iconBackgroundColor ?? AppColors.primaryLight, // Berilgan yoki default rang
+                    color: iconBackgroundColor ?? theme.colorScheme.surfaceContainerHigh,
                     shape: BoxShape.circle,
                   ),
                   child: Center(
                     child: Image.asset(
-                      cardIconPath!, // Karta ikonasini ko'rsatish
+                      cardIconPath!,
                       width: appWidth(6),
                       height: appWidth(6),
                       fit: BoxFit.contain,
+                      color: theme.textTheme.bodyMedium?.color, // Optional: tint icon
                     ),
                   ),
                 )
-              else // Agar ikona yo'li berilmagan bo'lsa, default ikonka
+              else
                 Container(
                   width: appWidth(10),
                   height: appWidth(10),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryLight, // Default rang
+                    color: theme.colorScheme.surfaceContainerHigh,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.credit_card_outlined, // Default karta ikonasi
-                    color: AppColors.primaryDark,
+                    Icons.credit_card_outlined,
+                    color: theme.primaryColor,
                     size: appWidth(5),
                   ),
                 ),
-              SizedBox(width: appWidth(3)), // Ikona va text orasidagi bo'shliq
-              Expanded( // Matn joyni egallashi uchun
+              SizedBox(width: appWidth(3)),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       cardType,
-                      style: AppTextStyle.body.copyWith(fontWeight: FontWeight.bold, fontSize: appWidth(4)),
+                      style: AppTextStyle.body.copyWith(fontWeight: FontWeight.bold, fontSize: appWidth(4), color: theme.textTheme.bodyMedium?.color),
                     ),
                     SizedBox(height: appHeight(0.5)),
                     Text(
-                      'XXXX XXXX XXXX $lastFourDigits', // Kartaning oxirgi raqamlari
-                      style: AppTextStyle.body.copyWith(color: AppColors.textGrey, fontSize: appWidth(3.5)),
+                      'XXXX XXXX XXXX $lastFourDigits',
+                      style: AppTextStyle.body.copyWith(color: theme.hintColor, fontSize: appWidth(3.5)),
                     ),
                     SizedBox(height: appHeight(0.5)),
                     Row(
                       children: [
                         Text(
                           'Expiry : $expiryDate',
-                          style: AppTextStyle.body.copyWith(color: AppColors.textGrey, fontSize: appWidth(3.5)),
+                          style: AppTextStyle.body.copyWith(color: theme.hintColor, fontSize: appWidth(3.5)),
                         ),
                         SizedBox(width: appWidth(3)),
                         Text(
                           'CVV : $cvv',
-                          style: AppTextStyle.body.copyWith(color: AppColors.textGrey, fontSize: appWidth(3.5)),
+                          style: AppTextStyle.body.copyWith(color: theme.hintColor, fontSize: appWidth(3.5)),
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
-              IconButton( // Tahrirlash/O'q ikonasi
-                icon: Icon(Icons.chevron_right, color: AppColors.textGrey, size: appWidth(6)),
+              IconButton(
+                icon: Icon(Icons.chevron_right, color: theme.hintColor, size: appWidth(6)),
                 onPressed: onEdit,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),

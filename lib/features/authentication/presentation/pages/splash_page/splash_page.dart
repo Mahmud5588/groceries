@@ -1,6 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:groceries/core/const/colors/app_colors.dart';
-import 'package:groceries/core/const/strings/app_strings.dart';
 import 'package:groceries/core/route/route_names.dart';
 import '../../../../../core/const/utils/app_responsive.dart';
 
@@ -14,22 +13,10 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   final PageController _pageController = PageController(initialPage: 0);
   final List<Map<String, dynamic>> _splashData = [
-    {
-      'title': AppStrings.welcome,
-      'image': 'assets/images/splash1.png',
-    },
-    {
-      'title': AppStrings.splash1,
-      'image': 'assets/images/splash2.png',
-    },
-    {
-      'title': AppStrings.splash2,
-      'image': 'assets/images/splash3.png',
-    },
-    {
-      'title': AppStrings.splash3,
-      'image': 'assets/images/splash4.png',
-    },
+    {'title': "welcome".tr(), 'image': 'assets/images/splash1.png'},
+    {'title': "splash1".tr(), 'image': 'assets/images/splash2.png'},
+    {'title': "splash2".tr(), 'image': 'assets/images/splash3.png'},
+    {'title': "splash3".tr(), 'image': 'assets/images/splash4.png'},
   ];
   int _currentPage = 0;
   bool _isLastPage = false;
@@ -75,6 +62,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           PageView.builder(
@@ -99,45 +87,40 @@ class _SplashPageState extends State<SplashPage> {
             left: AppResponsive.width(5),
             right: AppResponsive.width(5),
             child: SizedBox(
-              height: AppResponsive.height(6),
+              height: AppResponsive.height(7), // Adjusted height slightly
               child: ElevatedButton(
                 onPressed: _navigateToNextPage,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryDark,
+                  backgroundColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child: Text(
-                  _isLastPage ? AppStrings.getStarted : "Continue",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                  _isLastPage ? "getStarted".tr() : "continue".tr(),
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
               ),
             ),
           ),
-
         ],
       ),
     );
   }
 
-  Widget _buildSplashPage(
-      {required String title, required String imagePath, required bool isCurrentPage}) {
+  Widget _buildSplashPage({
+    required String title,
+    required String imagePath,
+    required bool isCurrentPage,
+  }) {
     return SizedBox(
       width: AppResponsive.screenWidth,
       height: AppResponsive.screenHeight,
       child: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.cover,
-            ),
-          ),
+          Positioned.fill(child: Image.asset(imagePath, fit: BoxFit.cover)),
           Positioned(
             top: AppResponsive.height(10),
             left: 0,
@@ -147,10 +130,9 @@ class _SplashPageState extends State<SplashPage> {
               child: Text(
                 title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.headlineMedium?.color,
                 ),
               ),
             ),
@@ -158,9 +140,7 @@ class _SplashPageState extends State<SplashPage> {
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: AppResponsive.height(2)),
-              ],
+              children: <Widget>[SizedBox(height: AppResponsive.height(2))],
             ),
           ),
         ],
@@ -179,11 +159,13 @@ class _SplashPageState extends State<SplashPage> {
           margin: const EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: _currentPage == index ? AppColors.primaryDark : Colors.grey,
+            color:
+                _currentPage == index
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).hintColor?.withOpacity(0.5),
           ),
         );
       }),
     );
   }
 }
-

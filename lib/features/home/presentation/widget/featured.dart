@@ -30,16 +30,19 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
 
   @override
   Widget build(BuildContext context) {
+    AppResponsive.init(context);
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: widget.onPressed,
       child: Container(
-        width: AppResponsive.width(20),
-        margin: const EdgeInsets.all(8),
-        padding: const EdgeInsets.all(8),
+        width: AppResponsive.width(40), // Adjust width for better layout
+        margin: EdgeInsets.all(appWidth(2)), // Adjust margin
+        padding: EdgeInsets.all(appWidth(3)), // Adjust padding
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade200),
-          color: Colors.white,
+          border: Border.all(color: theme.dividerColor),
+          color: theme.cardColor,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -50,41 +53,41 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
                   Align(
                     alignment: Alignment.center,
                     child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: const BoxDecoration(
+                      padding: EdgeInsets.all(appWidth(2.5)), // Adjust padding
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Color(0xFFFFF0F0),
+                        color: theme.colorScheme.surfaceContainerHighest, // Theme color
                       ),
                       child: Image.asset(
                         widget.image,
-                        width: 80,
-                        height: 80,
+                        width: appWidth(18), // Responsive size
+                        height: appWidth(18), // Responsive size
                       ),
                     ),
                   ),
                   if (widget.isNew)
                     Positioned(
-                      top: 0,
-                      left: 0,
+                      top: appHeight(0.5), // Adjust position
+                      left: appWidth(0.5), // Adjust position
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: EdgeInsets.symmetric(horizontal: appWidth(2), vertical: appHeight(0.5)), // Responsive padding
                         decoration: BoxDecoration(
-                          color: Colors.orangeAccent,
+                          color: theme.colorScheme.secondary, // Theme color
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: const Text(
+                        child: Text(
                           "NEW",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSecondary, // Theme color
                             fontWeight: FontWeight.bold,
+                            fontSize: appWidth(2.5), // Responsive font size
                           ),
                         ),
                       ),
                     ),
                   Positioned(
-                    top: 0,
-                    right: 0,
+                    top: appHeight(0.5), // Adjust position
+                    right: appWidth(0.5), // Adjust position
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
@@ -93,52 +96,53 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
                       },
                       child: Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
-                        size: 20,
-                        color: isFavorite ? Colors.red : Colors.black54,
+                        size: appWidth(5), // Responsive size
+                        color: isFavorite ? theme.colorScheme.error : theme.hintColor, // Theme colors
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: appHeight(1)), // Responsive spacing
               Text(
                 widget.price,
-                style: const TextStyle(
-                  color: AppColors.primaryDark,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.primaryColor, // Theme color
                   fontWeight: FontWeight.bold,
+                  fontSize: appWidth(4), // Responsive font size
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: appHeight(0.5)), // Responsive spacing
               Text(widget.name,
-                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-              const SizedBox(height: 4),
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: appWidth(4))), // Responsive font size
+              SizedBox(height: appHeight(0.5)), // Responsive spacing
               Text(widget.unit,
-                  style: const TextStyle(color: Colors.grey, fontSize: 12)),
-              const SizedBox(height: 10),
+                  style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor, fontSize: appWidth(3))), // Responsive font size
+              SizedBox(height: appHeight(1.5)), // Responsive spacing
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding: EdgeInsets.symmetric(vertical: appHeight(1.5)), // Responsive padding
                 decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: Colors.grey.shade200)),
+                  border: Border(top: BorderSide(color: theme.dividerColor)), // Theme color
                 ),
                 child: quantity == 0
                     ? GestureDetector(
-                                      onTap: () => setState(() => quantity = 1),
-                                      child: Row(
+                  onTap: () => setState(() => quantity = 1),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.shopping_bag_outlined, color: AppColors.primaryDark),
-                      SizedBox(width: 6),
-                      Text("Add to cart", style: TextStyle(color: AppColors.textBlack)),
+                    children: [
+                      Icon(Icons.shopping_bag_outlined, color: theme.primaryColor, size: appWidth(5)), // Theme color, Responsive size
+                      SizedBox(width: appWidth(1.5)), // Responsive spacing
+                      Text("Add to cart", style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodyMedium?.color, fontSize: appWidth(3.5))), // Theme color, Responsive font size
                     ],
-                                      ),
-                                    )
+                  ),
+                )
                     : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.remove_circle_outline),
-                      color: AppColors.primaryDark,
+                      icon: Icon(Icons.remove_circle_outline, size: appWidth(6)), // Responsive size
+                      color: theme.primaryColor, // Theme color
                       onPressed: () {
                         setState(() {
                           quantity = quantity > 1 ? quantity - 1 : 0;
@@ -147,12 +151,12 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
                     ),
                     Text(
                       "$quantity",
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold, fontSize: appWidth(4)), // Responsive font size
                     ),
                     IconButton(
-                      icon: const Icon(Icons.add_circle_outline),
-                      color: AppColors.primaryDark,
+                      icon: Icon(Icons.add_circle_outline, size: appWidth(6)), // Responsive size
+                      color: theme.primaryColor, // Theme color
                       onPressed: () {
                         setState(() {
                           quantity++;

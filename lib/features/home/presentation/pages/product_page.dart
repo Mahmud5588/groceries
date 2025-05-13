@@ -11,14 +11,15 @@ class ProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppResponsive.init(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundPink,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textBlack),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.foregroundColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -28,10 +29,9 @@ class ProductPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: double.infinity,
               height: appHeight(35),
-              color: AppColors.backgroundPink,
               child: Center(
                 child: Image.asset(
                   'assets/images/peach.png',
@@ -53,11 +53,11 @@ class ProductPage extends StatelessWidget {
                       Text(
                         '\$2.22',
                         style: AppTextStyle.heading.copyWith(
-                          color: AppColors.primaryDark,
+                          color: theme.primaryColor,
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.favorite_border, color: AppColors.textGrey),
+                        icon: Icon(Icons.favorite_border, color: theme.hintColor),
                         onPressed: () {},
                       ),
                     ],
@@ -65,7 +65,7 @@ class ProductPage extends StatelessWidget {
                   SizedBox(height: appHeight(1)),
                   Text(
                     'Organic Lemons',
-                    style: AppTextStyle.heading,
+                    style: theme.textTheme.headlineMedium,
                   ),
                   SizedBox(height: appHeight(1)),
                   Row(
@@ -78,12 +78,12 @@ class ProductPage extends StatelessWidget {
                       SizedBox(width: appWidth(2)),
                       Text(
                         '4.5',
-                        style: AppTextStyle.body.copyWith(fontWeight: FontWeight.bold),
+                        style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(width: appWidth(2)),
                       Text(
                         '(89 reviews)',
-                        style: AppTextStyle.body.copyWith(color: AppColors.textGrey),
+                        style: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor),
                       ),
                     ],
                   ),
@@ -99,12 +99,12 @@ class ProductPage extends StatelessWidget {
                               'but they will usually have a few more scars on the outside of the'
                               ' lemon skin. Organic lemons are considered to be the world\'s '
                               'finest lemon for juicing. ',
-                          style: AppTextStyle.body,
+                          style: theme.textTheme.bodyMedium,
                         ),
                         TextSpan(
                           text: 'more',
-                          style: AppTextStyle.body.copyWith(
-                            color: AppColors.link,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -117,28 +117,28 @@ class ProductPage extends StatelessWidget {
                     children: [
                       Text(
                         'Quantity',
-                        style: AppTextStyle.body.copyWith(fontWeight: FontWeight.bold),
+                        style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.border),
+                          border: Border.all(color: theme.dividerColor),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.remove, color: AppColors.textGrey),
+                              icon: Icon(Icons.remove, color: theme.hintColor),
                               onPressed: () {},
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: appWidth(4)),
                               child: Text(
                                 '3',
-                                style: AppTextStyle.body.copyWith(fontWeight: FontWeight.bold),
+                                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.add, color: AppColors.primaryDark),
+                              icon: Icon(Icons.add, color: theme.primaryColor),
                               onPressed: () {},
                             ),
                           ],

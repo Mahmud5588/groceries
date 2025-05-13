@@ -27,5 +27,13 @@ class AppStrings {
   static const String name="FullName";
   static const String category="Category";
   static const String signInYourAccount="Sign in your account";
+  static const String mode="Mode";
+  static const String language="Language";
+
+  static const String home="Home";
+  static const String favorite="Favorite";
+  static const String accounts="Accounts";
+  static const String carts="Carts";
+
 
 }

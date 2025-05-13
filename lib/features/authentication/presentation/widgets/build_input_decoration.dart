@@ -3,17 +3,17 @@ import 'package:groceries/core/const/colors/app_colors.dart';
 import 'package:groceries/core/const/strings/text_styles.dart';
 import 'package:groceries/core/const/utils/app_responsive.dart';
 
-InputDecoration buildInputDecoration({
+InputDecoration buildInputDecoration(BuildContext context, {
   required String hintText,
-  required IconData prefixIcon,
+  IconData? prefixIcon,
   int? maxLines = 1,
   TextInputType keyboardType = TextInputType.text,
   int? maxLength,
 }) {
   return InputDecoration(
     hintText: hintText,
-    hintStyle: AppTextStyle.body.copyWith(color: AppColors.textGrey, fontSize: appWidth(3.5)),
-    prefixIcon: Icon(prefixIcon, color: AppColors.textGrey, size: appWidth(5)),
+    hintStyle: AppTextStyle.body.copyWith(color: Theme.of(context).hintColor, fontSize: appWidth(3.5)),
+    prefixIcon: Icon(prefixIcon, color: Theme.of(context).hintColor, size: appWidth(5)),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide.none,
@@ -27,7 +27,7 @@ InputDecoration buildInputDecoration({
       borderSide: BorderSide.none,
     ),
     filled: true,
-    fillColor: AppColors.backgroundWhite,
+    fillColor: Theme.of(context).cardColor,
     contentPadding: EdgeInsets.symmetric(vertical: appHeight(2), horizontal: appWidth(4)),
     counterText: "",
   );

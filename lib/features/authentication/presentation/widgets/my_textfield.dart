@@ -41,16 +41,16 @@ class MyTextField extends StatelessWidget {
             hintText: texts,
             prefixIcon: icon,
             suffixIcon: element,
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.transparent),
+            focusedBorder:  OutlineInputBorder(
+              borderSide: BorderSide(color: Theme.of(context).scaffoldBackgroundColor),
               borderRadius: BorderRadius.zero,
             ),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.transparent),
+            enabledBorder:  OutlineInputBorder(
+              borderSide: BorderSide(color: Theme.of(context).scaffoldBackgroundColor),
               borderRadius: BorderRadius.zero,
             ),
-            border: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.transparent),
+            border:  OutlineInputBorder(
+              borderSide: BorderSide(color: Theme.of(context).scaffoldBackgroundColor),
               borderRadius: BorderRadius.zero,
             ),
             contentPadding: EdgeInsets.symmetric(

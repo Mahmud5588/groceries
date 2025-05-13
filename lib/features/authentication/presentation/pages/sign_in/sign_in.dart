@@ -1,11 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:groceries/core/const/colors/app_colors.dart';
 import 'package:groceries/core/const/strings/app_strings.dart';
 import 'package:groceries/core/route/route_names.dart';
 import 'package:groceries/features/authentication/presentation/widgets/button_widget.dart';
-import 'package:groceries/features/authentication/presentation/widgets/my_textfield.dart';
+import 'package:groceries/features/authentication/presentation/widgets/my_textfield.dart' show MyTextField;
 import '../../../../../core/const/strings/text_styles.dart';
 import '../../../../../core/const/utils/app_responsive.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -27,10 +28,40 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  // Assuming this function is defined in this file or imported
+  InputDecoration buildInputDecoration({
+    required String hintText,
+    required IconData prefixIcon,
+  }) {
+    return InputDecoration(
+      hintText: hintText,
+      hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor, fontSize: appWidth(3.5)),
+      prefixIcon: Icon(prefixIcon, color: Theme.of(context).hintColor, size: appWidth(5)),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      filled: true,
+      fillColor: Theme.of(context).cardColor, // Use cardColor or surface color for TextField background
+      contentPadding: EdgeInsets.symmetric(vertical: appHeight(2), horizontal: appWidth(4)),
+      counterText: "",
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     AppResponsive.init(context);
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           SizedBox(
@@ -43,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
             top: MediaQuery.of(context).padding.top + 10,
             left: 10,
             child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              icon: Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.foregroundColor),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
@@ -52,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
             left: 0,
             right: 0,
             child: Center(
-              child: Text(AppStrings.welcome, style: AppTextStyle.titleWhite),
+              child: Text("welcome".tr(), style: AppTextStyle.titleWhite.copyWith(color: Theme.of(context).appBarTheme.foregroundColor)),
             ),
           ),
 
@@ -65,47 +96,53 @@ class _LoginPageState extends State<LoginPage> {
                   padding: EdgeInsets.symmetric(
                     horizontal: AppResponsive.width(5),
                   ),
-                  color: AppColors.backgroundWhite,
+                  color: Theme.of(context).scaffoldBackgroundColor, // Use scaffold background color
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: AppResponsive.height(3)),
-                        const Text(
-                          AppStrings.welcomeBack,
-                          style: AppTextStyle.heading,
+                        Text(
+                          "welcomeBack".tr(),
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         SizedBox(height: AppResponsive.height(1)),
-                        const Text(
-                          AppStrings.signInYourAccount,
-                          style: AppTextStyle.caption,
+                        Text(
+                          "signInYourAccount".tr(),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).hintColor),
                         ),
                         SizedBox(height: AppResponsive.height(3)),
 
                         MyTextField(
-                          texts: AppStrings.email,
-                          icon: const Icon(Icons.email),
                           controller: _emailController,
+                          texts: "email".tr(),
+                          icon: Icon(Icons.email, color: Theme.of(context).hintColor, size: appWidth(5)),
                           keyboardType: TextInputType.emailAddress,
+                          decoration: buildInputDecoration(hintText:"email".tr(), prefixIcon: Icons.email),
                         ),
                         SizedBox(height: AppResponsive.height(2)),
 
                         MyTextField(
-                          texts: AppStrings.password,
-                          icon: const Icon(Icons.lock),
                           controller: _passwordController,
+                          texts: "password".tr(),
+                          icon: Icon(Icons.lock, color: Theme.of(context).hintColor, size: appWidth(5)),
                           obscureText: _obscurePassword,
-                          element: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+                          keyboardType: TextInputType.text,
+                          decoration: buildInputDecoration(hintText: "password".tr(), prefixIcon: Icons.lock).copyWith(
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Theme.of(context).hintColor,
+                                size: appWidth(5),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
                           ),
                         ),
                         SizedBox(height: AppResponsive.height(1.5)),
@@ -120,16 +157,21 @@ class _LoginPageState extends State<LoginPage> {
                                   onChanged: (val) {
                                     setState(() => _rememberMe = val!);
                                   },
-                                  activeColor: AppColors.primary,
+                                  activeColor: Theme.of(context).primaryColor,
                                 ),
-                                const Text(AppStrings.rememberMe),
+                                Text(
+                                  "rememberMe".tr(),
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: appWidth(3.5)),
+                                ),
                               ],
                             ),
                             TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                AppStrings.forgotPassword,
-                                style: TextStyle(color: Colors.blue),
+                              onPressed: () {
+                                Navigator.pushNamed(context, RouteNames.forgotPasswordPage);
+                              },
+                              child: Text(
+                                "forgotPassword".tr(),
+                                style: AppTextStyle.body.copyWith(color: Theme.of(context).primaryColor, fontSize: appWidth(3.5)),
                               ),
                             ),
                           ],
@@ -138,11 +180,12 @@ class _LoginPageState extends State<LoginPage> {
 
                         SizedBox(
                           width: double.infinity,
-                          height: AppResponsive.height(6),
+                          height: AppResponsive.height(7),
                           child: ButtonWidget(
-                            text: AppStrings.login,
+                            text: "login".tr(),
                             onPressed: () {
                               Navigator.pushNamed(context, RouteNames.bottomPage);
+                              print('Login button tapped');
                             },
                           ),
                         ),
@@ -151,14 +194,17 @@ class _LoginPageState extends State<LoginPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(AppStrings.dontHaveAccount),
+                            Text(
+                              "dontHaveAccount".tr(),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: appWidth(3.5)),
+                            ),
                             TextButton(
                               onPressed: () {
                                 Navigator.pushNamed(context, RouteNames.signUp);
                               },
-                              child: const Text(
-                                AppStrings.signUp,
-                                style: TextStyle(color: Colors.black),
+                              child: Text(
+                               "signUp".tr(),
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).textTheme.bodyMedium?.color, fontWeight: FontWeight.bold, fontSize: appWidth(3.5)),
                               ),
                             ),
                           ],

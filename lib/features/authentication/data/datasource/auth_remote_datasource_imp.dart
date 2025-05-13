@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:groceries/core/network/dio_client.dart';
 import 'package:groceries/core/network/urls.dart';
@@ -19,12 +18,31 @@ class AuthRemoteDataSourceImp implements AuthRemoteDataSource {
   Future<ApiResponseModel> _handleResponse(Future<dynamic> request) async {
     try {
       final response = await request;
-      logger.i(response.data);
+      logger.i('Response data: ${response.data}');
+      final statusCode = response.statusCode;
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (statusCode == 200 || statusCode == 201) {
+        return ApiResponseModel.fromJson(response.data);
+      } else if (statusCode == 400) {
+        logger.w('Bad Request: $statusCode');
+        return ApiResponseModel.fromJson(response.data);
+      } else if (statusCode == 401) {
+        logger.w('Unauthorized: $statusCode');
+        return ApiResponseModel.fromJson(response.data);
+      } else if (statusCode == 403) {
+        logger.w('Forbidden: $statusCode');
+        return ApiResponseModel.fromJson(response.data);
+      } else if (statusCode == 404) {
+        logger.w('Not Found: $statusCode');
+        return ApiResponseModel.fromJson(response.data);
+      } else if (statusCode == 422) {
+        logger.w('Unprocessable Entity: $statusCode');
+        return ApiResponseModel.fromJson(response.data);
+      } else if (statusCode == 500) {
+        logger.w('Internal Server Error: $statusCode');
         return ApiResponseModel.fromJson(response.data);
       } else {
-        logger.w('Unexpected status code: ${response.statusCode}');
+        logger.w('Unexpected status code: $statusCode');
         return ApiResponseModel.fromJson(response.data);
       }
     } on DioException catch (dioError) {

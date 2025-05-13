@@ -4,11 +4,11 @@ import 'package:groceries/core/const/strings/text_styles.dart';
 import 'package:groceries/core/const/utils/app_responsive.dart';
 
 class TransactionItemWidget extends StatelessWidget {
-  final String iconPath; // Tranzaksiya turining ikonasi (Mastercard, Visa, Paypal logolari)
-  final String type; // Tranzaksiya turi (Masalan, "Master Card", "Paypal")
-  final String dateTime; // Tranzaksiya sanasi va vaqti (Masalan, "Dec 12 2021 at 10:00 pm")
-  final String amount; // Tranzaksiya miqdori (Masalan, "$89", "$567")
-  final Color? iconBackgroundColor; // Ikona orqasidagi doira rangi
+  final String iconPath;
+  final String type;
+  final String dateTime;
+  final String amount;
+  final Color? iconBackgroundColor;
 
   const TransactionItemWidget({
     Key? key,
@@ -21,62 +21,61 @@ class TransactionItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // AppResponsive ni bu widget ishlatilishidan oldin ishga tushirilganiga ishonch hosil qiling
-    // AppResponsive.init(context); // Odatda buni MaterialApp dan yuqoriroq qilasiz
+    AppResponsive.init(context);
+    final theme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: appHeight(1.5)), // Vertikal bo'shliq
-      margin: EdgeInsets.symmetric(horizontal: appWidth(5)), // Sahifa paddingiga moslash
-      decoration: const BoxDecoration(
+      padding: EdgeInsets.symmetric(vertical: appHeight(1.5)),
+      margin: EdgeInsets.symmetric(horizontal: appWidth(5)),
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: AppColors.border, // Pastki chegara chizig'i
+            color: theme.dividerColor,
             width: 1.0,
           ),
         ),
       ),
       child: Row(
         children: [
-          // Ikona doirasi
           Container(
             width: appWidth(10),
             height: appWidth(10),
             decoration: BoxDecoration(
-              color: iconBackgroundColor ?? AppColors.primaryLight, // Berilgan yoki default rang
+              color: iconBackgroundColor ?? theme.colorScheme.surfaceContainerHigh,
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Image.asset(
-                iconPath, // Ikona rasmi
+                iconPath,
                 width: appWidth(6),
                 height: appWidth(6),
                 fit: BoxFit.contain,
+                color: theme.textTheme.bodyMedium?.color,
               ),
             ),
           ),
-          SizedBox(width: appWidth(3)), // Ikona va text orasidagi bo'shliq
-          Expanded( // Matn qismi qolgan joyni egallashi uchun
+          SizedBox(width: appWidth(3)),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   type,
-                  style: AppTextStyle.body.copyWith(fontWeight: FontWeight.bold, fontSize: appWidth(4)),
+                  style: AppTextStyle.body.copyWith(fontWeight: FontWeight.bold, fontSize: appWidth(4), color: theme.textTheme.bodyMedium?.color),
                 ),
                 SizedBox(height: appHeight(0.5)),
                 Text(
                   dateTime,
-                  style: AppTextStyle.caption.copyWith(color: AppColors.textGrey, fontSize: appWidth(3.5)),
+                  style: AppTextStyle.caption.copyWith(color: theme.hintColor, fontSize: appWidth(3.5)),
                 ),
               ],
             ),
           ),
-          // Tranzaksiya miqdori
           Text(
             amount,
             style: AppTextStyle.body.copyWith(
               fontWeight: FontWeight.bold,
-              color: AppColors.primaryDark, // Yashil rang
+              color: theme.primaryColor,
               fontSize: appWidth(4),
             ),
           ),

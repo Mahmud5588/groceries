@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:groceries/core/const/colors/app_colors.dart';
 import 'package:groceries/core/const/strings/text_styles.dart';
 import 'package:groceries/core/const/utils/app_responsive.dart';
+import 'package:groceries/core/route/route_names.dart';
 import 'package:groceries/features/authentication/presentation/widgets/button_widget.dart';
 import 'package:groceries/features/authentication/presentation/widgets/my_textfield.dart';
 
@@ -28,17 +30,23 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     AppResponsive.init(context);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundPink,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundPink,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         title: Text(
-          'Password Recovery',
-          style: AppTextStyle.heading.copyWith(fontSize: appWidth(5)),
+          'passwordRecovery'.tr(),
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            fontSize: appWidth(5),
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textBlack),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -46,33 +54,45 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
-            horizontal: appWidth(5), vertical: appHeight(2)),
+          horizontal: appWidth(5),
+          vertical: appHeight(2),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: appHeight(3)),
 
             Text(
-              'Forgot Password',
-              style: AppTextStyle.heading.copyWith(fontSize: appWidth(6)),
+              "forgotPassword".tr(),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(fontSize: appWidth(6)),
             ),
             SizedBox(height: appHeight(1)),
 
             Text(
-              'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy',
-              style: AppTextStyle.body.copyWith(
-                  color: AppColors.textGrey, fontSize: appWidth(3.8)),
+              'lorem'.tr(),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).hintColor,
+                fontSize: appWidth(3.8),
+              ),
             ),
             SizedBox(height: appHeight(4)),
 
             MyTextField(
               controller: _emailController,
-              texts: 'Email Address',
-              icon: Icon(Icons.mail_outline, color: AppColors.textGrey,
-                  size: appWidth(5)),
+              texts: 'email'.tr(),
+              icon: Icon(
+                Icons.mail_outline,
+                color: Theme.of(context).hintColor,
+                size: appWidth(5),
+              ),
               keyboardType: TextInputType.emailAddress,
               decoration: buildInputDecoration(
-                  hintText: 'Email Address', prefixIcon: Icons.mail_outline),
+                context,
+                hintText: "email".trim(),
+                prefixIcon: Icons.mail_outline,
+              ),
             ),
             SizedBox(height: appHeight(4)),
 
@@ -80,9 +100,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               width: double.infinity,
               height: appHeight(7),
               child: ButtonWidget(
-                text: 'Send link',
+                text: 'sendLink'.tr(),
                 onPressed: () {
                   print('Send link tapped. Email: ${_emailController.text}');
+                  Navigator.pushNamed(context, RouteNames.verifyNumberPage);
                 },
               ),
             ),
@@ -91,5 +112,4 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       ),
     );
   }
-
 }

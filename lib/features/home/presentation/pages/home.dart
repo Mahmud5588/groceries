@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:groceries/core/const/strings/app_strings.dart';
@@ -55,9 +56,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        elevation: 0,
         flexibleSpace: Padding(
           padding: const EdgeInsets.only(
             top: 60,
@@ -67,16 +73,30 @@ class _HomePageState extends State<HomePage> {
           ),
           child: TextField(
             decoration: InputDecoration(
-              hintText: AppStrings.searchKeyword,
-              prefixIcon: const Icon(Icons.search),
-              suffix: IconButton(
-                icon: const Icon(Icons.tune),
-                onPressed: () {},
+              hintText:"searchKeyword".tr(),
+              hintStyle: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor),
+              prefixIcon: Icon(Icons.search, color: theme.hintColor),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.tune, color: theme.hintColor),
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteNames.filterPage);
+                },
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
-                borderSide: const BorderSide(color: Colors.white),
+                borderSide: BorderSide.none,
               ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: theme.cardColor,
+              contentPadding: EdgeInsets.symmetric(vertical: AppResponsive.height(1.5), horizontal: AppResponsive.width(4)),
             ),
           ),
         ),
@@ -105,7 +125,6 @@ class _HomePageState extends State<HomePage> {
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            // Image as background
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.asset(
@@ -115,7 +134,6 @@ class _HomePageState extends State<HomePage> {
                                 height: double.infinity,
                               ),
                             ),
-                            // Title text on top of the image
                             Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -125,8 +143,8 @@ class _HomePageState extends State<HomePage> {
                                 alignment: Alignment.topCenter,
                                 child: Text(
                                   item['title'],
-                                  style: AppTextStyle.heading.copyWith(
-                                    color: AppColors.textBlack,
+                                  style: theme.textTheme.headlineMedium?.copyWith(
+                                    color: theme.textTheme.headlineMedium?.color,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -142,38 +160,41 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(AppStrings.category, style: AppTextStyle.heading),
-                     IconButton(icon:Icon(Icons.navigate_next, size: 40), onPressed: (){
-                       Navigator.pushNamed(context, RouteNames.categoryPage);
-                     }),
+                    Text("category".tr(), style: theme.textTheme.headlineMedium),
+                    IconButton(
+                      icon:Icon(Icons.navigate_next, size: 40, color: theme.textTheme.headlineMedium?.color),
+                      onPressed: (){
+                        Navigator.pushNamed(context, RouteNames.categoryPage);
+                      },
+                    ),
                   ],
                 ),
                 SizedBox(
-                  height: 100,
+                  height: AppResponsive.height(14),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: category.categories.length,
                     itemBuilder: (context, index) {
                       final categories = category.categories[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: EdgeInsets.symmetric(horizontal: appWidth(2)),
                         child: Column(
                           children: [
                             CircleAvatar(
-                              radius: 30,
-                              backgroundColor: AppColors.backgroundWhite,
+                              radius: AppResponsive.width(7),
+                              backgroundColor: theme.cardColor,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Image.asset(
                                   categories['image'],
                                   fit: BoxFit.contain,
-                                  width: 30,
-                                  height: 30,
+                                  width: AppResponsive.width(6),
+                                  height: AppResponsive.width(6),
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 5),
-                            Text(categories['title'], style: AppTextStyle.body),
+                            SizedBox(height: AppResponsive.height(0.5)),
+                            Text(categories['title'], style: theme.textTheme.bodyMedium),
                           ],
                         ),
                       );
@@ -181,11 +202,14 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(height: AppResponsive.height(2)),
-                Text("Featured Products", style: AppTextStyle.heading),
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("featuredProducts".tr(), style: theme.textTheme.headlineMedium)),
+                SizedBox(height: AppResponsive.height(1)),
                 GridView.count(
                   crossAxisCount: 2,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
+                  mainAxisSpacing: AppResponsive.height(2),
+                  crossAxisSpacing: AppResponsive.width(4),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   childAspectRatio: 0.6,
@@ -204,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                       unit: '1.5 kg',
                       isNew: true,
                       onPressed: (){
-                        Navigator.pushNamed(context, RouteNames.productsPage);
+                        Navigator.pushNamed(context, RouteNames.productPage);
                       },
                     ),
                     FeaturedProductCard(

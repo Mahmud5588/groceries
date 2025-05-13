@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:groceries/core/const/colors/app_colors.dart';
-import 'package:groceries/core/const/strings/text_styles.dart';
+
 import 'package:groceries/core/const/utils/app_responsive.dart';
 import 'package:groceries/features/authentication/presentation/widgets/button_widget.dart';
 import 'package:groceries/features/profile/presentation/widget/address_widget.dart' show AddressCardWidget;
@@ -10,7 +9,7 @@ import 'package:groceries/features/profile/presentation/widget/build_textfield.d
 
 
 class AddressPage extends StatefulWidget {
-  const AddressPage({Key? key}) : super(key: key);
+  const AddressPage({super.key});
 
   @override
   State<AddressPage> createState() => _AddressPageState();
@@ -63,26 +62,27 @@ class _AddressPageState extends State<AddressPage> {
   @override
   Widget build(BuildContext context) {
     AppResponsive.init(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundPink,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundPink,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         title: Text(
           'My Address',
-          style: AppTextStyle.heading.copyWith(fontSize: appWidth(5)),
+          style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(5), color: theme.appBarTheme.foregroundColor),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textBlack),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.foregroundColor),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_circle_outline, color: AppColors.textBlack),
+            icon: Icon(Icons.add_circle_outline, color: theme.appBarTheme.foregroundColor),
             onPressed: () {
 
               print('Add new address tapped');
@@ -118,20 +118,20 @@ class _AddressPageState extends State<AddressPage> {
 
             Text(
               'Add New Address',
-              style: AppTextStyle.heading.copyWith(fontSize: appWidth(4.5)),
+              style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(4.5)),
             ),
             SizedBox(height: appHeight(2)),
 
-            // Name Input
             buildTextField(
+              context,
               controller: _nameController,
               hintText: 'Name',
               prefixIcon: Icons.person_outline,
             ),
             SizedBox(height: appHeight(1.5)),
 
-            // Address Input
             buildTextField(
+              context,
               controller: _addressController,
               hintText: 'Address',
               prefixIcon: Icons.location_on_outlined,
@@ -144,6 +144,7 @@ class _AddressPageState extends State<AddressPage> {
               children: [
                 Expanded(
                   child: buildTextField(
+                    context,
                     controller: _cityController,
                     hintText: 'City',
                     prefixIcon: Icons.location_city_outlined,
@@ -152,6 +153,7 @@ class _AddressPageState extends State<AddressPage> {
                 SizedBox(width: appWidth(4)),
                 Expanded(
                   child: buildTextField(
+                    context,
                     controller: _zipCodeController,
                     hintText: 'Zip code',
                     prefixIcon: Icons.markunread_mailbox_outlined,
@@ -163,13 +165,14 @@ class _AddressPageState extends State<AddressPage> {
 
 
             buildDropdownField(
+              context,
               hintText: 'Country',
               prefixIcon: Icons.language,
               value: _selectedCountry,
               items: _countries.map((String country) {
                 return DropdownMenuItem<String>(
                   value: country,
-                  child: Text(country, style: AppTextStyle.body.copyWith(fontSize: appWidth(3.5))),
+                  child: Text(country, style: theme.textTheme.bodyMedium?.copyWith(fontSize: appWidth(3.5), color: theme.textTheme.bodyMedium?.color)),
                 );
               }).toList(),
               onChanged: (String? newValue) {
@@ -180,8 +183,8 @@ class _AddressPageState extends State<AddressPage> {
             ),
             SizedBox(height: appHeight(1.5)),
 
-            // Phone Number Input
             buildTextField(
+              context,
               controller: _phoneController,
               hintText: 'Phone number',
               prefixIcon: Icons.phone_outlined,
@@ -189,13 +192,12 @@ class _AddressPageState extends State<AddressPage> {
             ),
             SizedBox(height: appHeight(2)),
 
-            // Make Default Toggle
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Make default',
-                  style: AppTextStyle.body.copyWith(fontWeight: FontWeight.bold, fontSize: appWidth(4)),
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: appWidth(4)),
                 ),
                 Switch(
                   value: _isDefault,
@@ -204,14 +206,13 @@ class _AddressPageState extends State<AddressPage> {
                       _isDefault = newValue;
                     });
                   },
-                  activeColor: AppColors.primaryDark,
-                  inactiveTrackColor: AppColors.textGrey.withOpacity(0.3),
+                  activeColor: theme.switchTheme.thumbColor?.resolve({WidgetState.selected}),
+                  inactiveTrackColor: theme.switchTheme.trackColor?.resolve({WidgetState.disabled}),
                 ),
               ],
             ),
             SizedBox(height: appHeight(4)),
 
-            // Save Settings Button
             SizedBox(
               width: double.infinity,
               height: appHeight(7),
@@ -227,5 +228,5 @@ class _AddressPageState extends State<AddressPage> {
         ),
       ),
     );
-  }}
-
+  }
+}

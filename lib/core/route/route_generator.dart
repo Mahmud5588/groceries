@@ -6,7 +6,10 @@ import 'package:groceries/features/authentication/presentation/pages/forgot_pass
 import 'package:groceries/features/authentication/presentation/pages/sign_in/sign_in.dart';
 import 'package:groceries/features/authentication/presentation/pages/sign_up/sign_up.dart';
 import 'package:groceries/features/authentication/presentation/pages/splash_page/splash_page.dart';
+import 'package:groceries/features/card/presentation/pages/shopping_cart_page.dart';
 import 'package:groceries/features/home/presentation/pages/category_page.dart';
+import 'package:groceries/features/home/presentation/pages/favorites.dart';
+import 'package:groceries/features/home/presentation/pages/filter.dart';
 import 'package:groceries/features/home/presentation/pages/home.dart';
 import 'package:groceries/features/home/presentation/pages/product_page.dart';
 import 'package:groceries/features/home/presentation/pages/products_page.dart';
@@ -14,11 +17,11 @@ import 'package:groceries/features/profile/presentation/pages/about_me_page.dart
 
 import 'package:groceries/features/profile/presentation/pages/add_creditcard.dart';
 import 'package:groceries/features/profile/presentation/pages/address_page.dart';
+import 'package:groceries/features/profile/presentation/pages/language_page.dart';
 import 'package:groceries/features/profile/presentation/pages/my_card_page.dart';
 import 'package:groceries/features/profile/presentation/pages/notifications_page.dart';
 import 'package:groceries/features/profile/presentation/pages/profile_page.dart';
 import 'package:groceries/features/profile/presentation/pages/transaction_page.dart';
-
 
 class AppRoute {
   BuildContext context;
@@ -59,8 +62,16 @@ class AppRoute {
         return MaterialPageRoute(builder: (context) => ForgotPassword());
       case RouteNames.verifyNumberPage:
         return MaterialPageRoute(builder: (context) => VerifyNumberPage());
-        case RouteNames.aboutMePage:
+      case RouteNames.aboutMePage:
         return MaterialPageRoute(builder: (context) => AboutMePage());
+      case RouteNames.shoppingCartPage:
+        return MaterialPageRoute(builder: (context) => ShoppingCartPage());
+      case RouteNames.filterPage:
+        return MaterialPageRoute(builder: (context) => ApplyFiltersPage());
+      case RouteNames.favoritesPage:
+        return MaterialPageRoute(builder: (context) => FavoritesPage());
+      case RouteNames.languagePage:
+        return MaterialPageRoute(builder: (context) => Language());
 
       default:
         return MaterialPageRoute(builder: (context) => Placeholder());

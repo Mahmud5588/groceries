@@ -3,7 +3,6 @@ import 'package:groceries/core/const/colors/app_colors.dart';
 import 'package:groceries/core/const/strings/text_styles.dart';
 import 'package:groceries/core/const/utils/app_responsive.dart';
 
-
 class NotificationSettingItemWidget extends StatefulWidget {
   final String title;
   final String description;
@@ -33,16 +32,19 @@ class _NotificationSettingItemWidgetState extends State<NotificationSettingItemW
 
   @override
   Widget build(BuildContext context) {
+    AppResponsive.init(context);
+    final theme = Theme.of(context);
+
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: AppColors.border,
+            color: theme.dividerColor,
             width: 1.0,
           ),
         ),
       ),
-      padding: EdgeInsets.symmetric(vertical: appHeight(1.5), horizontal: appWidth(0)), // Ichki bo'shliq (gorizontal padding MyAddressPage dan keladi)
+      padding: EdgeInsets.symmetric(vertical: appHeight(1.5), horizontal: appWidth(0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -52,12 +54,12 @@ class _NotificationSettingItemWidgetState extends State<NotificationSettingItemW
               children: [
                 Text(
                   widget.title,
-                  style: AppTextStyle.body.copyWith(fontWeight: FontWeight.bold, fontSize: appWidth(4)),
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: appWidth(4), color: theme.textTheme.bodyMedium?.color),
                 ),
                 SizedBox(height: appHeight(0.5)),
                 Text(
                   widget.description,
-                  style: AppTextStyle.body.copyWith(color: AppColors.textGrey, fontSize: appWidth(3.5)),
+                  style: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor, fontSize: appWidth(3.5)),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -74,8 +76,8 @@ class _NotificationSettingItemWidgetState extends State<NotificationSettingItemW
                 widget.onChanged!(newValue);
               }
             },
-            activeColor: AppColors.primaryDark,
-            inactiveTrackColor: AppColors.textGrey.withOpacity(0.3),
+            activeColor: theme.switchTheme.thumbColor?.resolve({WidgetState.selected}),
+            inactiveTrackColor: theme.switchTheme.trackColor?.resolve({WidgetState.disabled}),
           ),
         ],
       ),

@@ -1,5 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:groceries/core/const/colors/app_colors.dart';
+import 'package:groceries/core/const/colors/app_colors.dart' show AppColors;
 import 'package:groceries/core/const/strings/text_styles.dart' show AppTextStyle;
 import 'package:groceries/core/const/utils/app_responsive.dart';
 import 'package:groceries/features/home/presentation/widget/category_widget.dart';
@@ -8,9 +9,8 @@ import 'package:groceries/features/home/presentation/widget/category_widget.dart
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({Key? key}) : super(key: key);
 
-  // Sample category data (PNG fayl yo'llari bilan)
   final List<Map<String, dynamic>> categories = const [
-    {'name': 'Vegetables', 'icon': 'assets/images/vegetables.png', 'color': Color(0xffEBFFD7)},
+    {'name': 'vegetables', 'icon': 'assets/images/vegetables.png', 'color': Color(0xffEBFFD7)},
     {'name': 'Fruits', 'icon': 'assets/images/fruit.png', 'color': Color(0xffFFE9E5)},
     {'name': 'Beverages', 'icon': 'assets/images/beverage.png', 'color': Color(0xffFFF9E5)},
     {'name': 'Grocery', 'icon': 'assets/images/grocery.png', 'color': Color(0xffF6E5FF)},
@@ -22,32 +22,33 @@ class CategoriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppResponsive.init(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.border,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundWhite,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         title: Text(
-          'Categories',
-          style: AppTextStyle.heading.copyWith(fontSize: appWidth(5)),
+          'categories'.tr(),
+          style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(5), color: theme.appBarTheme.foregroundColor),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textBlack),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.foregroundColor),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list, color: AppColors.textBlack),
+            icon: Icon(Icons.filter_list, color: theme.appBarTheme.foregroundColor),
             onPressed: () {},
           ),
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: appWidth(4), vertical: appHeight(2)),
+        padding: EdgeInsets.symmetric(horizontal: appWidth(5), vertical: appHeight(2)),
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,

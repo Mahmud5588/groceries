@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:groceries/core/const/strings/app_strings.dart';
 import 'package:groceries/core/const/strings/text_styles.dart';
 
 import '../../../../core/const/colors/app_colors.dart';
@@ -23,7 +22,7 @@ class ButtonWidget extends StatelessWidget {
       child: Ink(
         decoration: BoxDecoration(
           gradient:  LinearGradient(
-            colors: [AppColors.primaryDark, AppColors.primary],
+            colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColor],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
@@ -32,7 +31,7 @@ class ButtonWidget extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: AppTextStyle.button.copyWith(color: Colors.white),
+            style: AppTextStyle.button.copyWith(color: Theme.of(context).scaffoldBackgroundColor),
           ),
         ),
       ),

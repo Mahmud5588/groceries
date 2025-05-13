@@ -24,19 +24,20 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
     AppResponsive.init(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundPink,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundPink,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         title: Text(
           'Notifications',
-          style: AppTextStyle.heading.copyWith(fontSize: appWidth(5)),
+          style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(5), color: theme.appBarTheme.foregroundColor),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textBlack),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.foregroundColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -81,7 +82,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   description: description,
                   initialValue: initialValue,
                   onChanged: (newValue) {
-                    // Switch holati o'zgarganda _notificationSettings mapini yangilash
                     setState(() {
                       _notificationSettings[settingTitle] = newValue;
                     });
@@ -90,19 +90,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 );
               },
             ),
-            SizedBox(height: appHeight(4)), // List va tugma orasidagi bo'shliq
+            SizedBox(height: appHeight(4)),
 
-            // Save Settings Button
             SizedBox(
-              width: double.infinity, // Kenglikni to'ldirish
+              width: double.infinity,
               height: appHeight(7),
               child: ButtonWidget(
                 text: 'Save settings',
                 onPressed: () {
-                  // Sozlamalarni saqlash logikasi
                   print('Save settings tapped');
                   print('Current settings: $_notificationSettings');
-                  // _notificationSettings mapidagi holatni serverga yuborishingiz mumkin
                 },
               ),
             ),

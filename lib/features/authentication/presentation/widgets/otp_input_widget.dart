@@ -82,9 +82,9 @@ class _OtpInputWidgetState extends State<OtpInputWidget> {
           width: appWidth(12),
           height: appWidth(14),
           decoration: BoxDecoration(
-            color: AppColors.backgroundWhite,
+            color: Theme.of(context).scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(color: Theme.of(context).scaffoldBackgroundColor),
           ),
           child: Center(
             child: TextField(
@@ -94,7 +94,7 @@ class _OtpInputWidgetState extends State<OtpInputWidget> {
               keyboardType: TextInputType.number,
               style: AppTextStyle.heading.copyWith(fontSize: appWidth(5)),
               maxLength: 1,
-              cursorColor: AppColors.primaryDark,
+              cursorColor: Theme.of(context).primaryColor,
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 counterText: "",

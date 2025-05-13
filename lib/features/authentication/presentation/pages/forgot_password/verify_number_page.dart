@@ -1,10 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:groceries/core/const/colors/app_colors.dart';
 import 'package:groceries/core/const/strings/text_styles.dart';
+import 'package:groceries/core/const/utils/app_responsive.dart';
 import 'package:groceries/features/authentication/presentation/widgets/button_widget.dart';
 import 'package:groceries/features/authentication/presentation/widgets/otp_input_widget.dart';
-
-import '../../../../../core/const/utils/app_responsive.dart';
 
 class VerifyNumberPage extends StatefulWidget {
   const VerifyNumberPage({Key? key}) : super(key: key);
@@ -29,17 +29,17 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
     AppResponsive.init(context);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundPink,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundPink,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         title: Text(
-          'Verify Number',
-          style: AppTextStyle.heading.copyWith(fontSize: appWidth(5)),
+          "verifyNumber".tr(),
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: appWidth(5), color: Theme.of(context).appBarTheme.foregroundColor),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textBlack),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.foregroundColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -52,16 +52,16 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
             SizedBox(height: appHeight(5)),
 
             Text(
-              'Verify your number',
+              "verifyNumber".tr(),
               textAlign: TextAlign.center,
-              style: AppTextStyle.heading.copyWith(fontSize: appWidth(6)),
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: appWidth(6)),
             ),
             SizedBox(height: appHeight(1)),
 
             Text(
-              'Enter your OTP code below',
+              "enterOtp".tr(),
               textAlign: TextAlign.center,
-              style: AppTextStyle.body.copyWith(color: AppColors.textGrey, fontSize: appWidth(3.8)),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).hintColor, fontSize: appWidth(3.8)),
             ),
             SizedBox(height: appHeight(4)),
 
@@ -80,12 +80,10 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
                 width: double.infinity,
                 height: appHeight(7),
                 child: ButtonWidget(
-                  text: 'Next',
-                  onPressed: _enteredOtp.length == _otpFieldCount
-                      ? () {
-                    print('OTP entered: $_enteredOtp');
-                  }
-                      : null,
+                  text: 'next'.tr(),
+                  onPressed: () {
+                    print('Next tapped');
+                  },
                 ),
               ),
             ),
@@ -96,10 +94,11 @@ class _VerifyNumberPageState extends State<VerifyNumberPage> {
                 print('Resend code tapped');
               },
               child: Text(
-                'Didn\'t receive the code? Resend a new code',
-                style: AppTextStyle.body.copyWith(color: AppColors.link, fontSize: appWidth(3.8)),
+                'didntResive'.tr(),
+                style: AppTextStyle.body.copyWith(color: Theme.of(context).primaryColor, fontSize: appWidth(3.8)),
               ),
             ),
+
             SizedBox(height: appHeight(20)),
           ],
         ),

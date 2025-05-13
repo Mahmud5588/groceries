@@ -17,6 +17,8 @@ class RouteNames {
   static const String forgotPasswordPage = '/forgotPasswordPage';
   static const String verifyNumberPage = '/verifyNumberPage';
   static const String aboutMePage = '/aboutMePage';
-
-
+  static const String shoppingCartPage = '/shoppingCartPage';
+  static const String filterPage = '/filterPage';
+  static const String favoritesPage = '/favoritesPage';
+  static const String languagePage = '/languagePage';
 }

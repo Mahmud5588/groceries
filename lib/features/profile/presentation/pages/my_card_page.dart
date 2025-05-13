@@ -4,6 +4,7 @@ import 'package:groceries/core/const/strings/text_styles.dart';
 import 'package:groceries/core/const/utils/app_responsive.dart';
 import 'package:groceries/core/route/route_names.dart';
 import 'package:groceries/features/authentication/presentation/widgets/button_widget.dart';
+import 'package:groceries/features/authentication/presentation/widgets/my_textfield.dart' show MyTextField;
 import 'package:groceries/features/profile/presentation/widget/credit_card_widget.dart' show CreditCardWidget;
 
 class MyCardsPage extends StatefulWidget {
@@ -14,23 +15,21 @@ class MyCardsPage extends StatefulWidget {
 }
 
 class _MyCardsPageState extends State<MyCardsPage> {
-  // Form controllerlar
   final TextEditingController _nameOnCardController = TextEditingController();
   final TextEditingController _cardNumberController = TextEditingController();
   final TextEditingController _expiryDateController = TextEditingController();
   final TextEditingController _cvvController = TextEditingController();
 
-  bool _isDefault = false; // "Make default" switch holati
+  bool _isDefault = false;
 
-  // Sample card data (misol uchun)
   final List<Map<String, dynamic>> cards = [
     {
       'cardType': 'Master Card',
       'lastFourDigits': '5678',
       'expiryDate': '01/22',
       'cvv': '908',
-      'cardIconPath': 'assets/images/mastercard.png', // O\'zingizning ikonka yo\'lingizni qo\'ying
-      'iconBackgroundColor': const Color(0xffFFE9E5), // Misol rang
+      'cardIconPath': 'assets/images/mastercard.png',
+      'iconBackgroundColor': const Color(0xffFFE9E5),
       'isDefault': true,
     },
     {
@@ -38,8 +37,8 @@ class _MyCardsPageState extends State<MyCardsPage> {
       'lastFourDigits': '5678',
       'expiryDate': '01/22',
       'cvv': '908',
-      'cardIconPath': 'assets/images/mastercard.png', // O\'zingizning ikonka yo\'lingizni qo\'ying
-      'iconBackgroundColor': const Color(0xffE5F7FF), // Misol rang
+      'cardIconPath': 'assets/images/mastercard.png',
+      'iconBackgroundColor': const Color(0xffE5F7FF),
       'isDefault': false,
     },
     {
@@ -47,16 +46,14 @@ class _MyCardsPageState extends State<MyCardsPage> {
       'lastFourDigits': '5678',
       'expiryDate': '01/22',
       'cvv': '908',
-      'cardIconPath': 'assets/images/mastercard.png', // O\'zingizning ikonka yo\'lingizni qo\'ying
-      'iconBackgroundColor': const Color(0xffFFE9E5), // Misol rang
+      'cardIconPath': 'assets/images/mastercard.png',
+      'iconBackgroundColor': const Color(0xffFFE9E5),
       'isDefault': false,
     },
-    // Add more cards here
   ];
 
   @override
   void dispose() {
-    // Controllerlarni dispose qilish
     _nameOnCardController.dispose();
     _cardNumberController.dispose();
     _expiryDateController.dispose();
@@ -64,41 +61,73 @@ class _MyCardsPageState extends State<MyCardsPage> {
     super.dispose();
   }
 
+  InputDecoration _buildInputDecoration(BuildContext context, {
+    required String hintText,
+    required IconData prefixIcon,
+    int? maxLines = 1,
+    TextInputType keyboardType = TextInputType.text,
+    int? maxLength,
+  }) {
+    final theme = Theme.of(context);
+    return InputDecoration(
+      hintText: hintText,
+      hintStyle: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor, fontSize: appWidth(3.5)),
+      prefixIcon: Icon(prefixIcon, color: theme.hintColor, size: appWidth(5)),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      filled: true,
+      fillColor: theme.cardColor,
+      contentPadding: EdgeInsets.symmetric(vertical: appHeight(2), horizontal: appWidth(4)),
+      counterText: "",
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     AppResponsive.init(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundPink, // Fon rangi
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundPink,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         title: Text(
           'My Cards',
-          style: AppTextStyle.heading.copyWith(fontSize: appWidth(5)),
+          style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(5), color: theme.appBarTheme.foregroundColor),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textBlack),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.foregroundColor),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add_circle_outline, color: AppColors.textBlack), // Plus ikonasi
+            icon: Icon(Icons.add_circle_outline, color: theme.appBarTheme.foregroundColor),
             onPressed: () {
               Navigator.pushNamed(context, RouteNames.addCreditCardPage);
             },
           ),
         ],
       ),
-      body: SingleChildScrollView( // Kontent sig'masa scroll qilish uchun
+      body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: appWidth(5), vertical: appHeight(2)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Karta kartalarini chiqarish
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -114,70 +143,71 @@ class _MyCardsPageState extends State<MyCardsPage> {
                   iconBackgroundColor: card['iconBackgroundColor'],
                   isDefault: card['isDefault'],
                   onEdit: () {
-                    // Kartani tahrirlash funksiyasi
                     print('Edit card: ${card['cardType']}');
                   },
                 );
               },
             ),
-            SizedBox(height: appHeight(3)), // Kartalar va forma orasidagi bo'shliq
+            SizedBox(height: appHeight(3)),
 
-            // Karta kiritish formasi qismi
             Text(
-              'Add New Card', // Forma sarlavhasi
-              style: AppTextStyle.heading.copyWith(fontSize: appWidth(4.5)),
+              'Add New Card',
+              style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(4.5)),
             ),
             SizedBox(height: appHeight(2)),
 
-            // Name on Card Input
-            _buildTextField(
+            MyTextField(
               controller: _nameOnCardController,
-              hintText: 'Russell Austin', // Misol matn
-              prefixIcon: Icons.person_outline,
+              texts: 'Russell Austin',
+              icon: Icon(Icons.person_outline, color: theme.hintColor, size: appWidth(5)),
+              keyboardType: TextInputType.name,
+              decoration: _buildInputDecoration(context, hintText: 'Russell Austin', prefixIcon: Icons.person_outline),
             ),
             SizedBox(height: appHeight(1.5)),
 
-            // Card Number Input
-            _buildTextField(
+            MyTextField(
               controller: _cardNumberController,
-              hintText: 'XXXX XXXX XXXX 5678', // Misol matn
-              prefixIcon: Icons.credit_card_outlined,
-              keyboardType: TextInputType.number, // Raqam kiritish uchun
+              texts: 'XXXX XXXX XXXX 5678',
+              icon: Icon(Icons.credit_card_outlined, color: theme.hintColor, size: appWidth(5)),
+              keyboardType: TextInputType.number,
+              maxLines: 19,
+              decoration: _buildInputDecoration(context, hintText: 'XXXX XXXX XXXX 5678', prefixIcon: Icons.credit_card_outlined),
             ),
             SizedBox(height: appHeight(1.5)),
 
-            // Expiry Date and CVV Row
             Row(
               children: [
                 Expanded(
-                  child: _buildTextField(
+                  child: MyTextField(
                     controller: _expiryDateController,
-                    hintText: '01/22', // Misol matn
-                    prefixIcon: Icons.calendar_today_outlined,
-                    keyboardType: TextInputType.datetime, // Sana kiritish uchun
+                    texts: '01/22',
+                    icon: Icon(Icons.calendar_today_outlined, color: theme.hintColor, size: appWidth(5)),
+                    keyboardType: TextInputType.datetime,
+                    maxLines: 5,
+                    decoration: _buildInputDecoration(context, hintText: '01/22', prefixIcon: Icons.calendar_today_outlined),
                   ),
                 ),
                 SizedBox(width: appWidth(4)),
                 Expanded(
-                  child: _buildTextField(
+                  child: MyTextField(
                     controller: _cvvController,
-                    hintText: '908', // Misol matn
-                    prefixIcon: Icons.lock_outline, // Qulf ikonasi
-                    keyboardType: TextInputType.number, // Raqam kiritish uchun
-                    maxLength: 3, // CVV odatda 3 raqamli bo'ladi
+                    texts: '908',
+                    icon: Icon(Icons.lock_outline, color: theme.hintColor, size: appWidth(5)),
+                    keyboardType: TextInputType.number,
+                     maxLines: 3,
+                    decoration: _buildInputDecoration(context, hintText: '908', prefixIcon: Icons.lock_outline),
                   ),
                 ),
               ],
             ),
             SizedBox(height: appHeight(2)),
 
-            // Make Default Toggle
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Make default',
-                  style: AppTextStyle.body.copyWith(fontWeight: FontWeight.bold, fontSize: appWidth(4)),
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: appWidth(4)),
                 ),
                 Switch(
                   value: _isDefault,
@@ -186,64 +216,25 @@ class _MyCardsPageState extends State<MyCardsPage> {
                       _isDefault = newValue;
                     });
                   },
-                  activeColor: AppColors.primaryDark,
-                  inactiveTrackColor: AppColors.textGrey.withOpacity(0.3),
+                  activeColor: theme.switchTheme.thumbColor?.resolve({WidgetState.selected}),
+                  inactiveTrackColor: theme.switchTheme.trackColor?.resolve({WidgetState.disabled}),
                 ),
               ],
             ),
             SizedBox(height: appHeight(4)),
 
-            // Save Settings Button
             SizedBox(
               width: double.infinity,
               height: appHeight(7),
               child: ButtonWidget(
                 text: 'Save settings',
                 onPressed: () {
-                  // Sozlamalarni saqlash logikasi
                   print('Save settings tapped');
-                  // Formadagi datalarni olish:
-                  // print('Name on Card: ${_nameOnCardController.text}');
-                  // print('Card Number: ${_cardNumberController.text}');
-                  // print('Expiry Date: ${_expiryDateController.text}');
-                  // print('CVV: ${_cvvController.text}');
-                  // print('Is Default: $_isDefault');
                 },
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // Reusable TextField widget (avvalgisidan olindi)
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String hintText,
-    required IconData prefixIcon,
-    int? maxLines = 1,
-    TextInputType keyboardType = TextInputType.text,
-    int? maxLength, // Yangi: max belgilar soni uchun
-  }) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      maxLines: maxLines,
-      maxLength: maxLength, // Max belgilar soni
-      style: AppTextStyle.body.copyWith(fontSize: appWidth(3.5)),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: AppTextStyle.body.copyWith(color: AppColors.textGrey, fontSize: appWidth(3.5)),
-        prefixIcon: Icon(prefixIcon, color: AppColors.textGrey, size: appWidth(5)),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        filled: true,
-        fillColor: AppColors.backgroundWhite,
-        contentPadding: EdgeInsets.symmetric(vertical: appHeight(2), horizontal: appWidth(4)),
-        counterText: "", // maxLength ishlatilganda pastdagi hisoblagichni yashirish
       ),
     );
   }

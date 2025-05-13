@@ -4,7 +4,6 @@ import 'package:groceries/core/const/strings/text_styles.dart';
 import 'package:groceries/core/const/utils/app_responsive.dart';
 
 
-
 class CategoryItemWidget extends StatelessWidget {
   final String iconPath;
   final String name;
@@ -19,13 +18,16 @@ class CategoryItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppResponsive.init(context);
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: () {
         print('Category tapped: $name');
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.backgroundWhite,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -63,7 +65,7 @@ class CategoryItemWidget extends StatelessWidget {
               textAlign: TextAlign.center,
               style: AppTextStyle.body.copyWith(
                 fontSize: appWidth(3),
-                color: AppColors.textBlack,
+                color: theme.textTheme.bodyMedium?.color,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

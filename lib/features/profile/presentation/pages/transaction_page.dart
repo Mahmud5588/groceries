@@ -7,7 +7,6 @@ import 'package:groceries/features/profile/presentation/widget/transaction_widge
 class TransactionsPage extends StatelessWidget {
   const TransactionsPage({Key? key}) : super(key: key);
 
-  // Misol tranzaksiya datosi
   final List<Map<String, dynamic>> transactions = const [
     {'icon': 'assets/images/mastercard.png', 'type': 'Master Card', 'dateTime': 'Dec 12 2021 at 10:00 pm', 'amount': '\$89', 'iconBg': Color(0xffFFE9E5)},
     {'icon': 'assets/images/mastercard.png', 'type': 'Visa Card', 'dateTime': 'Dec 12 2021 at 10:00 pm', 'amount': '\$109', 'iconBg': Color(0xffE5F7FF)},
@@ -15,32 +14,32 @@ class TransactionsPage extends StatelessWidget {
     {'icon': 'assets/images/mastercard.png', 'type': 'Paypal', 'dateTime': 'Dec 12 2021 at 10:00 pm', 'amount': '\$567', 'iconBg': Color(0xffE5FFFB)},
     {'icon': 'assets/images/mastercard.png', 'type': 'Visa Card', 'dateTime': 'Dec 12 2021 at 10:00 pm', 'amount': '\$109', 'iconBg': Color(0xffE5F7FF)},
     {'icon': 'assets/images/mastercard.png', 'type': 'Master Card', 'dateTime': 'Dec 12 2021 at 10:00 pm', 'amount': '\$89', 'iconBg': Color(0xffFFE9E5)},
-    // Boshqa tranzaksiyalarni qo'shing
   ];
 
   @override
   Widget build(BuildContext context) {
     AppResponsive.init(context);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundPink,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundPink,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         title: Text(
           'Transactions',
-          style: AppTextStyle.heading.copyWith(fontSize: appWidth(5)),
+          style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(5), color: theme.appBarTheme.foregroundColor),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textBlack),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.foregroundColor),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
       ),
       body: ListView.builder(
-        padding: EdgeInsets.symmetric(vertical: appHeight(2)), // Umumiy list uchun vertikal padding
+        padding: EdgeInsets.symmetric(vertical: appHeight(2)),
         itemCount: transactions.length,
         itemBuilder: (context, index) {
           final transaction = transactions[index];
