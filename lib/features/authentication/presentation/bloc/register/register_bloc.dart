@@ -14,11 +14,12 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         final result = await registerUseCase(
           email: event.email,
           first_name: event.first_name,
-          last_name: event.last_name,
+          last_name: event.last_name ?? '',
           password: event.password,
           password_confirmation: event.password_confirmation,
-          profile_picture: event.profile_picture,
+          profile_picture: event.profile_picture ?? '',
         );
+        emit(RegisterSuccess(result));
       } catch (e) {
         emit(RegisterFailure(e.toString()));
       }

@@ -1,8 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:groceries/core/const/utils/app_responsive.dart';
-import 'package:groceries/features/card/presentation/widgets/shopping_cart_item_widget.dart';
+import 'package:groceries/core/route/route_names.dart';
+import 'package:groceries/features/cart/presentation/widgets/shopping_cart_item_widget.dart';
+import 'package:groceries/features/home/domain/entities/product_entites.dart';
+import 'package:groceries/features/home/presentation/bloc/event.dart';
+import 'package:groceries/features/home/presentation/bloc/products/products_bloc.dart';
+import 'package:groceries/features/home/presentation/bloc/products/products_state.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({Key? key}) : super(key: key);
@@ -12,32 +17,19 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
-  final List<Map<String, dynamic>> _favoriteItems = [
-    {'imageUrl': 'assets/images/peach.png', 'pricePerUnit': '\$2.22', 'quantity': 4, 'productName': 'Fresh Broccoli', 'unit': '1.50 lbs'},
-    {'imageUrl': 'assets/images/peach.png', 'pricePerUnit': '\$2.22', 'quantity': 5, 'productName': 'Black Grapes', 'unit': '5.0 lbs'},
-    {'imageUrl': 'assets/images/peach.png', 'pricePerUnit': '\$2.22', 'quantity': 5, 'productName': 'Avacoda', 'unit': '1.50 lbs'},
-    {'imageUrl': 'assets/images/peach.png', 'pricePerUnit': '\$2.22', 'quantity': 5, 'productName': 'Pineapple', 'unit': 'dozen'},
-  ];
-
-  void _incrementQuantity(int index) {
-    setState(() {
-      _favoriteItems[index]['quantity']++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProductBloc>().add(FetchFavoritesEvent());
   }
 
-  void _decrementQuantity(int index) {
-    if (_favoriteItems[index]['quantity'] > 1) {
-      setState(() {
-        _favoriteItems[index]['quantity']--;
-      });
-    }
+  void _toggleFavorite(int productId) {
+    context.read<ProductBloc>().add(ToggleFavoriteEvent(productId));
   }
 
-  void _deleteItem(int index) {
-    setState(() {
-      _favoriteItems.removeAt(index);
-    });
-  }
+  void _incrementQuantity(int index, List<Product> items) {}
+
+  void _decrementQuantity(int index, List<Product> items) {}
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +43,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
         elevation: 0,
         title: Text(
           'favorites'.tr(),
-          style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(5), color: theme.appBarTheme.foregroundColor),
+          style: theme.textTheme.headlineMedium
+              ?.copyWith(fontSize: appWidth(5), color: theme.appBarTheme.foregroundColor),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -61,21 +54,55 @@ class _FavoritesPageState extends State<FavoritesPage> {
           },
         ),
       ),
-      body: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: appWidth(5), vertical: appHeight(2)),
-        itemCount: _favoriteItems.length,
-        itemBuilder: (context, index) {
-          final item = _favoriteItems[index];
-          return ShoppingCartItemWidget(
-            imageUrl: item['imageUrl'],
-            pricePerUnit: item['pricePerUnit'],
-            quantity: item['quantity'],
-            productName: item['productName'],
-            unit: item['unit'],
-            onAdd: () => _incrementQuantity(index),
-            onRemove: () => _decrementQuantity(index),
-            onDelete: () => _deleteItem(index),
-          );
+      body: BlocConsumer<ProductBloc, ProductState>(
+        listener: (context, state) {
+          if (state is AuthenticationError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              RouteNames.signIn,
+                  (route) => false,
+            );
+          } else if (state is ProductError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error: ${state.message}')),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is FavoritesLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is FavoritesLoaded) {
+            if (state.favorites.isEmpty) {
+              return Center(
+                child: Text(
+                  'no_favorites_yet'.tr(),
+                  style: theme.textTheme.bodyLarge,
+                ),
+              );
+            }
+            return ListView.builder(
+              padding: EdgeInsets.symmetric(horizontal: appWidth(5), vertical: appHeight(2)),
+              itemCount: state.favorites.length,
+              itemBuilder: (context, index) {
+                final item = state.favorites[index];
+                return ShoppingCartItemWidget(
+                  imageUrl: item.image,
+                  pricePerUnit: '\$${item.price.toStringAsFixed(2)}',
+                  quantity: 1,
+                  productName: item.name,
+                  unit: item.unit,
+                  onAdd: () => _incrementQuantity(index, state.favorites),
+                  onRemove: () => _decrementQuantity(index, state.favorites),
+                  onDelete: () => _toggleFavorite(item.id),
+                );
+              },
+            );
+          } else if (state is ProductError) {
+            return Center(child: Text('failed_to_load_favorites'.tr()));
+          }
+          return const SizedBox.shrink();
         },
       ),
     );

@@ -4,14 +4,14 @@ import 'package:groceries/core/const/strings/text_styles.dart';
 import '../../../../core/const/colors/app_colors.dart';
 class ButtonWidget extends StatelessWidget {
   String text;
-  Function() onPressed;
+  Function()? onPressed;
   ButtonWidget({super.key,required this.text,required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        onPressed();
+        onPressed!();
       },
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.zero,

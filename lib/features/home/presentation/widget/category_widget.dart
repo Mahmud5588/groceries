@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:groceries/core/const/colors/app_colors.dart' show AppColors;
-import 'package:groceries/core/const/strings/text_styles.dart';
 import 'package:groceries/core/const/utils/app_responsive.dart';
-
+import 'package:groceries/core/const/strings/text_styles.dart';
 
 class CategoryItemWidget extends StatelessWidget {
   final String iconPath;
   final String name;
   final Color backgroundColor;
+  final VoidCallback? onTap;
 
   const CategoryItemWidget({
     Key? key,
     required this.iconPath,
     required this.name,
     required this.backgroundColor,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -22,9 +22,7 @@ class CategoryItemWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return GestureDetector(
-      onTap: () {
-        print('Category tapped: $name');
-      },
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: theme.cardColor,
@@ -38,24 +36,48 @@ class CategoryItemWidget extends StatelessWidget {
             ),
           ],
         ),
-        padding: EdgeInsets.symmetric(vertical: appHeight(2), horizontal: appWidth(2)),
+        padding: EdgeInsets.symmetric(vertical: appHeight(1.5), horizontal: appWidth(1.5)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: appWidth(12),
-              height: appWidth(12),
+              width: appWidth(13),
+              height: appWidth(13),
               decoration: BoxDecoration(
                 color: backgroundColor,
                 shape: BoxShape.circle,
               ),
               padding: EdgeInsets.all(appWidth(2.5)),
               child: Center(
-                child: Image.asset(
+                child: iconPath.startsWith('http') || iconPath.startsWith('https')
+                    ? Image.network(
                   iconPath,
-                  width: appWidth(6),
-                  height: appWidth(6),
+                  width: appWidth(7),
+                  height: appWidth(7),
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    Icons.category_outlined,
+                    size: appWidth(6),
+                    color: theme.iconTheme.color?.withOpacity(0.7),
+                  ),
+                )
+                    : iconPath.isNotEmpty
+                    ? Image.asset(
+                  iconPath,
+                  width: appWidth(7),
+                  height: appWidth(7),
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    Icons.category_outlined,
+                    size: appWidth(6),
+                    color: theme.iconTheme.color?.withOpacity(0.7),
+                  ),
+                )
+                    : Icon(
+                  Icons.category_outlined,
+                  size: appWidth(6),
+                  color: theme.iconTheme.color?.withOpacity(0.7),
                 ),
               ),
             ),
@@ -63,9 +85,9 @@ class CategoryItemWidget extends StatelessWidget {
             Text(
               name,
               textAlign: TextAlign.center,
-              style: AppTextStyle.body.copyWith(
-                fontSize: appWidth(3),
-                color: theme.textTheme.bodyMedium?.color,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontSize: appWidth(3.2),
+                fontWeight: FontWeight.w500,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

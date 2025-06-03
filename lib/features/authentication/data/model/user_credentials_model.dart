@@ -9,11 +9,11 @@ class UserCredentialsModel extends HiveObject {
   @HiveField(1)
   String password;
   @HiveField(2)
-  String token;
+  String? token;
 
   UserCredentialsModel({
     required this.email,
     required this.password,
-    required this.token,
+    this.token,
   });
 }

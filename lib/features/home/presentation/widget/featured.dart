@@ -1,32 +1,27 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:groceries/core/const/colors/app_colors.dart';
 import 'package:groceries/core/const/utils/app_responsive.dart';
+import 'package:groceries/features/home/domain/entities/product_entites.dart';
 
-class FeaturedProductCard extends StatefulWidget {
-  final String image;
-  final String name;
-  final String price;
-  final String unit;
-  final bool isNew;
-  final Function() onPressed;
+class FeaturedProductCard extends StatelessWidget {
+  final Product product;
+  final VoidCallback onPressed;
+  final VoidCallback? onFavoriteToggle;
+  final VoidCallback onAddToCart;
+  final int cartQuantity;
+  final Function(Product) onIncrement;
+  final Function(Product) onDecrement;
 
   const FeaturedProductCard({
-    super.key,
-    required this.image,
-    required this.name,
-    required this.price,
-    required this.unit,
-    this.isNew = false,
+    Key? key,
+    required this.product,
     required this.onPressed,
-  });
-
-  @override
-  State<FeaturedProductCard> createState() => _FeaturedProductCardState();
-}
-
-class _FeaturedProductCardState extends State<FeaturedProductCard> {
-  int quantity = 0;
-  bool isFavorite = false;
+    this.onFavoriteToggle,
+    required this.onAddToCart,
+    this.cartQuantity = 0,
+    required this.onIncrement,
+    required this.onDecrement,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,140 +29,184 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
     final theme = Theme.of(context);
 
     return GestureDetector(
-      onTap: widget.onPressed,
+      onTap: onPressed,
       child: Container(
-        width: AppResponsive.width(40), // Adjust width for better layout
-        margin: EdgeInsets.all(appWidth(2)), // Adjust margin
-        padding: EdgeInsets.all(appWidth(3)), // Adjust padding
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: theme.dividerColor),
           color: theme.cardColor,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      padding: EdgeInsets.all(appWidth(2.5)), // Adjust padding
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: theme.colorScheme.surfaceContainerHighest, // Theme color
-                      ),
-                      child: Image.asset(
-                        widget.image,
-                        width: appWidth(18), // Responsive size
-                        height: appWidth(18), // Responsive size
-                      ),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                    child: product.image.isNotEmpty
+                        ? Image.network(
+                      product.image,
+                      height: AppResponsive.height(18),
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/images/default_product.png',
+                          height: AppResponsive.height(18),
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        );
+                      },
+                    )
+                        : Image.asset(
+                      'assets/images/default_product.png',
+                      height: AppResponsive.height(18),
+                      width: double.infinity,
+                      fit: BoxFit.contain,
                     ),
                   ),
-                  if (widget.isNew)
+                  if (product.isNew ?? false)
                     Positioned(
-                      top: appHeight(0.5), // Adjust position
-                      left: appWidth(0.5), // Adjust position
+                      top: AppResponsive.height(1),
+                      left: AppResponsive.width(2),
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: appWidth(2), vertical: appHeight(0.5)), // Responsive padding
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppResponsive.width(2),
+                          vertical: AppResponsive.height(0.5),
+                        ),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.secondary, // Theme color
-                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         child: Text(
-                          "NEW",
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSecondary, // Theme color
+                          'new_product'.tr(),
+                          style: TextStyle(
+                            fontSize: AppResponsive.width(3),
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: appWidth(2.5), // Responsive font size
                           ),
                         ),
                       ),
                     ),
                   Positioned(
-                    top: appHeight(0.5), // Adjust position
-                    right: appWidth(0.5), // Adjust position
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isFavorite = !isFavorite;
-                        });
-                      },
-                      child: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        size: appWidth(5), // Responsive size
-                        color: isFavorite ? theme.colorScheme.error : theme.hintColor, // Theme colors
+                    top: AppResponsive.height(0.5),
+                    right: AppResponsive.width(1),
+                    child: IconButton(
+                      icon: Icon(
+                        product.isFavorite ?? false ? Icons.favorite : Icons.favorite_border,
+                        color: product.isFavorite ?? false ? Colors.red : theme.hintColor,
+                        size: AppResponsive.width(6),
                       ),
+                      onPressed: onFavoriteToggle,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: appHeight(1)), // Responsive spacing
-              Text(
-                widget.price,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.primaryColor, // Theme color
-                  fontWeight: FontWeight.bold,
-                  fontSize: appWidth(4), // Responsive font size
-                ),
-              ),
-              SizedBox(height: appHeight(0.5)), // Responsive spacing
-              Text(widget.name,
-                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: appWidth(4))), // Responsive font size
-              SizedBox(height: appHeight(0.5)), // Responsive spacing
-              Text(widget.unit,
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor, fontSize: appWidth(3))), // Responsive font size
-              SizedBox(height: appHeight(1.5)), // Responsive spacing
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: appHeight(1.5)), // Responsive padding
-                decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: theme.dividerColor)), // Theme color
-                ),
-                child: quantity == 0
-                    ? GestureDetector(
-                  onTap: () => setState(() => quantity = 1),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            Padding(
+              padding: EdgeInsets.all(AppResponsive.width(2)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    product.name,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontSize: AppResponsive.width(3.8),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: AppResponsive.height(0.3)),
+                  Text(
+                    product.unit,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.hintColor,
+                      fontSize: AppResponsive.width(3.3),
+                    ),
+                  ),
+                  SizedBox(height: AppResponsive.height(0.7)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(Icons.shopping_bag_outlined, color: theme.primaryColor, size: appWidth(5)), // Theme color, Responsive size
-                      SizedBox(width: appWidth(1.5)), // Responsive spacing
-                      Text("Add to cart", style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodyMedium?.color, fontSize: appWidth(3.5))), // Theme color, Responsive font size
+                      Expanded(
+                        child: Text(
+                          '\$${product.price.toStringAsFixed(2)}',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: theme.primaryColor,
+                            fontSize: AppResponsive.width(4.0),
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      SizedBox(width: AppResponsive.width(1)),
+
+                      if (cartQuantity == 0)
+                        Container(
+                          height: AppResponsive.width(7.5),
+                          width: AppResponsive.width(7.5),
+                          decoration: BoxDecoration(
+                            color: theme.primaryColor,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: Icon(Icons.add, color: Colors.white, size: AppResponsive.width(4.5)),
+                            onPressed: onAddToCart,
+                          ),
+                        )
+                      else
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: AppResponsive.width(6),
+                              height: AppResponsive.width(6),
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                icon: Icon(Icons.remove_circle_outline, color: theme.primaryColor, size: AppResponsive.width(5.0)),
+                                onPressed: () => onDecrement(product),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: AppResponsive.width(0.5)),
+                              child: Text(
+                                cartQuantity.toString(),
+                                style: theme.textTheme.titleMedium?.copyWith(fontSize: AppResponsive.width(3.8)),
+                              ),
+                            ),
+                            SizedBox(
+                              width: AppResponsive.width(6),
+                              height: AppResponsive.width(6),
+                              child: IconButton(
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                icon: Icon(Icons.add_circle_outline, color: theme.primaryColor, size: AppResponsive.width(5.0)),
+                                onPressed: () => onIncrement(product),
+                              ),
+                            ),
+                          ],
+                        ),
+
                     ],
                   ),
-                )
-                    : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.remove_circle_outline, size: appWidth(6)), // Responsive size
-                      color: theme.primaryColor, // Theme color
-                      onPressed: () {
-                        setState(() {
-                          quantity = quantity > 1 ? quantity - 1 : 0;
-                        });
-                      },
-                    ),
-                    Text(
-                      "$quantity",
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold, fontSize: appWidth(4)), // Responsive font size
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.add_circle_outline, size: appWidth(6)), // Responsive size
-                      color: theme.primaryColor, // Theme color
-                      onPressed: () {
-                        setState(() {
-                          quantity++;
-                        });
-                      },
-                    ),
-                  ],
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -19,7 +19,7 @@ class UserCredentialsModelAdapter extends TypeAdapter<UserCredentialsModel> {
     return UserCredentialsModel(
       email: fields[0] as String,
       password: fields[1] as String,
-      token: fields[2] as String,
+      token: fields[2] as String?,
     );
   }
 

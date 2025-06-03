@@ -6,13 +6,12 @@ import 'package:groceries/features/authentication/presentation/pages/forgot_pass
 import 'package:groceries/features/authentication/presentation/pages/sign_in/sign_in.dart';
 import 'package:groceries/features/authentication/presentation/pages/sign_up/sign_up.dart';
 import 'package:groceries/features/authentication/presentation/pages/splash_page/splash_page.dart';
-import 'package:groceries/features/card/presentation/pages/shopping_cart_page.dart';
+import 'package:groceries/features/cart/presentation/pages/shopping_cart_page.dart';
 import 'package:groceries/features/home/presentation/pages/category_page.dart';
 import 'package:groceries/features/home/presentation/pages/favorites.dart';
 import 'package:groceries/features/home/presentation/pages/filter.dart';
 import 'package:groceries/features/home/presentation/pages/home.dart';
 import 'package:groceries/features/home/presentation/pages/product_page.dart';
-import 'package:groceries/features/home/presentation/pages/products_page.dart';
 import 'package:groceries/features/profile/presentation/pages/about_me_page.dart';
 
 import 'package:groceries/features/profile/presentation/pages/add_creditcard.dart';
@@ -38,10 +37,8 @@ class AppRoute {
         return MaterialPageRoute(builder: (context) => SignUpPage());
       case RouteNames.homePage:
         return MaterialPageRoute(builder: (context) => HomePage());
-      case RouteNames.productPage:
-        return MaterialPageRoute(builder: (context) => ProductPage());
       case RouteNames.productsPage:
-        return MaterialPageRoute(builder: (context) => ProductsPage());
+        return MaterialPageRoute(builder: (context) => ProductPage( ));
       case RouteNames.categoryPage:
         return MaterialPageRoute(builder: (context) => CategoriesPage());
       case RouteNames.bottomPage:

@@ -1,23 +1,25 @@
 class UserEntities {
-  int id;
-  String first_name;
-  String last_name;
-  String email;
-  String? profile_picture;
-  DateTime email_verified_at;
-  String google_id;
-  DateTime created_at;
-  DateTime updated_at;
+  final int id;
+  final String first_name;
+  final String? last_name;
+  final String email;
+  final String? profile_picture;
+  final DateTime? email_verified_at;
+  final String? google_id;
+  final DateTime created_at;
+  final DateTime updated_at;
+  final String? phone;
 
   UserEntities({
     required this.id,
     required this.first_name,
-    required this.last_name,
+    this.last_name,
     required this.email,
     this.profile_picture,
-    required this.email_verified_at,
-    required this.google_id,
+    this.email_verified_at,
+    this.google_id,
     required this.created_at,
     required this.updated_at,
+    this.phone
   });
 }

@@ -4,18 +4,16 @@ import 'package:groceries/core/network/dio_client.dart';
 import 'package:groceries/core/network/urls.dart';
 import 'package:groceries/features/authentication/data/datasource/auth_remote_datasource.dart';
 import 'package:groceries/features/authentication/data/model/api_response_model.dart';
-import 'package:groceries/features/authentication/data/model/redirect.dart';
-import 'package:groceries/features/authentication/domain/entities/api_response.dart';
-import 'package:groceries/features/authentication/domain/entities/redirect_entities.dart';
+import 'package:groceries/features/authentication/domain/entities/api_response.dart'; // Bu import saqlanib qoladi
 import 'package:logger/logger.dart';
 
 class AuthRemoteDataSourceImp implements AuthRemoteDataSource {
-  DioClient _dioClient;
-  Logger logger = Logger();
+  final DioClient _dioClient;
+  final Logger logger = Logger();
 
   AuthRemoteDataSourceImp(this._dioClient);
 
-  Future<ApiResponseModel> _handleResponse(Future<dynamic> request) async {
+  Future<ApiResponseModel> _handleResponse(Future<Response> request) async {
     try {
       final response = await request;
       logger.i('Response data: ${response.data}');
@@ -23,75 +21,55 @@ class AuthRemoteDataSourceImp implements AuthRemoteDataSource {
 
       if (statusCode == 200 || statusCode == 201) {
         return ApiResponseModel.fromJson(response.data);
-      } else if (statusCode == 400) {
-        logger.w('Bad Request: $statusCode');
-        return ApiResponseModel.fromJson(response.data);
-      } else if (statusCode == 401) {
-        logger.w('Unauthorized: $statusCode');
-        return ApiResponseModel.fromJson(response.data);
-      } else if (statusCode == 403) {
-        logger.w('Forbidden: $statusCode');
-        return ApiResponseModel.fromJson(response.data);
-      } else if (statusCode == 404) {
-        logger.w('Not Found: $statusCode');
-        return ApiResponseModel.fromJson(response.data);
-      } else if (statusCode == 422) {
-        logger.w('Unprocessable Entity: $statusCode');
-        return ApiResponseModel.fromJson(response.data);
-      } else if (statusCode == 500) {
-        logger.w('Internal Server Error: $statusCode');
-        return ApiResponseModel.fromJson(response.data);
       } else {
-        logger.w('Unexpected status code: $statusCode');
+        // Xatolik holatida ham ApiResponseModel qaytaramiz
         return ApiResponseModel.fromJson(response.data);
       }
     } on DioException catch (dioError) {
       logger.e('Dio error: ${dioError.message}');
-      if (dioError.response != null) {
-        return ApiResponseModel.fromJson(dioError.response!.data);
+      String errorMessage = 'Kutilmagan xato ro\'y berdi. Iltimos, keyinroq urinib ko\'ring.';
+      String? errorDetails;
+
+      if (dioError.response != null && dioError.response!.data != null) {
+        errorDetails = (dioError.response!.data is Map && dioError.response!.data.containsKey('message'))
+            ? dioError.response!.data['message']
+            : dioError.response!.toString();
       }
-      throw Exception('Network error occurred: ${dioError.message}');
-    } on SocketException catch (_) {
-      logger.e('No Internet connection');
-      throw Exception('No Internet connection');
-    } on FormatException catch (_) {
-      logger.e('Invalid response format');
-      throw Exception('Invalid response format');
+
+      if (dioError.type == DioExceptionType.connectionTimeout) {
+        errorMessage = 'Ulanish vaqti tugadi. Internet aloqangizni tekshiring yoki keyinroq urinib ko\'ring.';
+      } else if (dioError.type == DioExceptionType.sendTimeout) {
+        errorMessage = 'Ma\'lumot yuborish vaqti tugadi. Internet aloqangizni tekshiring.';
+      } else if (dioError.type == DioExceptionType.receiveTimeout) {
+        errorMessage = 'Javobni olish vaqti tugadi. Server bilan bog\'liq muammo bo\'lishi mumkin.';
+      } else if (dioError.type == DioExceptionType.badResponse) {
+        errorMessage = errorDetails ?? 'Serverdan xato javobi keldi: ${dioError.response?.statusCode}';
+      } else if (dioError.type == DioExceptionType.cancel) {
+        errorMessage = 'So\'rov bekor qilindi.';
+      } else if (dioError.type == DioExceptionType.unknown) {
+        if (dioError.error is SocketException) {
+          errorMessage = 'Internet aloqasi mavjud emas. Iltimos, ulanishingizni tekshiring.';
+        } else {
+          errorMessage = 'Kutilmagan xato ro\'y berdi: ${dioError.message}';
+        }
+      }
+      return ApiResponseModel(
+        message: 'Error',
+        error: errorMessage,
+        userEntities: null,
+        token: null,
+        tokenType: null,
+      );
+    } on SocketException {
+      logger.e('Internet aloqasi yo\'q.');
+      return ApiResponseModel(message: 'Error', error: 'Internet aloqasi mavjud emas. Iltimos, ulanishingizni tekshiring.');
+    } on FormatException {
+      logger.e('Noto\'g\'ri javob formati.');
+      return ApiResponseModel(message: 'Error', error: 'Serverdan noto\'g\'ri ma\'lumot qabul qilindi. Muammo bo\'lishi mumkin.');
     } catch (e) {
-      logger.e('Unexpected error: $e');
-      throw Exception('Something went wrong');
+      logger.e('Kutilmagan xato: $e');
+      return ApiResponseModel(message: 'Error', error: 'Kutilmagan xato ro\'y berdi. Iltimos, keyinroq urinib ko\'ring.');
     }
-  }
-
-  @override
-  Future<void> emailCallback({
-    required String code,
-    required String state,
-  }) async {
-    // TODO: implement emailCallback
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<ApiResponseModel> emailResend() {
-    return _handleResponse(_dioClient.post(Urls.emailResend));
-  }
-
-  @override
-  Future<ApiResponseModel> emailVerify({
-    required int id,
-    required String token,
-    required int expires,
-    required String signature,
-  }) {
-    // TODO: implement emailVerify
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<RedirectModel> googleRedirect() {
-    // TODO: implement googleRedirect
-    throw UnimplementedError();
   }
 
   @override

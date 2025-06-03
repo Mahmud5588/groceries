@@ -1,7 +1,6 @@
+import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:groceries/core/const/colors/app_colors.dart';
-import 'package:groceries/core/const/strings/text_styles.dart';
 import 'package:groceries/core/const/utils/app_responsive.dart';
 import 'package:groceries/features/authentication/presentation/widgets/button_widget.dart';
 import 'package:groceries/features/authentication/presentation/widgets/my_textfield.dart';
@@ -18,12 +17,14 @@ class _ApplyFiltersPageState extends State<ApplyFiltersPage> {
   final TextEditingController _minPriceController = TextEditingController();
   final TextEditingController _maxPriceController = TextEditingController();
 
-  double _starRating = 4.0;
+  // Mahsulot filtrlari
+  bool _featuredSelected = false;
+  bool _isNewSelected = false;
+  bool _organicSelected = false;
 
-  bool _discountSelected = false;
-  bool _freeShippingSelected = false;
-  bool _sameDayDeliverySelected = false;
-
+  // Saralash filtrlari
+  String? _selectedSortBy;
+  String? _selectedSortOrder;
 
   @override
   void dispose() {
@@ -57,6 +58,33 @@ class _ApplyFiltersPageState extends State<ApplyFiltersPage> {
     );
   }
 
+  void _resetFilters() {
+    setState(() {
+      _minPriceController.clear();
+      _maxPriceController.clear();
+      _featuredSelected = false;
+      _isNewSelected = false;
+      _organicSelected = false;
+      _selectedSortBy = null;
+      _selectedSortOrder = null;
+    });
+  }
+
+  void _applyFilters() {
+    final Map<String, dynamic> filters = {
+      'minPrice': double.tryParse(_minPriceController.text),
+      'maxPrice': double.tryParse(_maxPriceController.text),
+      'featured': _featuredSelected,
+      'isNew': _isNewSelected,
+      'organic': _organicSelected,
+      'sortBy': _selectedSortBy,
+      'sortOrder': _selectedSortOrder,
+    };
+    filters.removeWhere((key, value) => value == null || (value is bool && !value));
+
+    Navigator.pop(context, filters);
+  }
+
   @override
   Widget build(BuildContext context) {
     AppResponsive.init(context);
@@ -81,9 +109,7 @@ class _ApplyFiltersPageState extends State<ApplyFiltersPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.refresh, color: theme.appBarTheme.foregroundColor),
-            onPressed: () {
-              print('Refresh filters tapped');
-            },
+            onPressed: _resetFilters,
           ),
         ],
       ),
@@ -113,78 +139,119 @@ class _ApplyFiltersPageState extends State<ApplyFiltersPage> {
                     controller: _maxPriceController,
                     texts: 'max'.tr(),
                     keyboardType: TextInputType.number,
-                    decoration: _buildInputDecoration(context, hintText: 'max'.tr(),
+                    decoration: _buildInputDecoration(context, hintText: 'max'.tr()),
                   ),
-                )),
+                ),
               ],
             ),
             SizedBox(height: appHeight(4)),
 
             Text(
-              'starRating'.tr(),
+              'productAttributes'.tr(),
               style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(4.5)),
             ),
             SizedBox(height: appHeight(2)),
-            Row(
+            FilterOptionWidget(
+              icon: Icons.star_border,
+              text: 'featuredProducts'.tr(),
+              initialValue: _featuredSelected,
+              onChanged: (newValue) {
+                setState(() {
+                  _featuredSelected = newValue;
+                });
+              },
+            ),
+            FilterOptionWidget(
+              icon: Icons.new_releases_outlined,
+              text: 'newProducts'.tr(),
+              initialValue: _isNewSelected,
+              onChanged: (newValue) {
+                setState(() {
+                  _isNewSelected = newValue;
+                });
+              },
+            ),
+            FilterOptionWidget(
+              icon: Icons.eco_outlined,
+              text: 'organicProducts'.tr(),
+              initialValue: _organicSelected,
+              onChanged: (newValue) {
+                setState(() {
+                  _organicSelected = newValue;
+                });
+              },
+            ),
+            SizedBox(height: appHeight(4)),
+
+            Text(
+              'sortBy'.tr(),
+              style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(4.5)),
+            ),
+            SizedBox(height: appHeight(1)),
+            Column(
               children: [
-                Row(
-                  children: List.generate(5, (index) {
-                    return Icon(
-                      index < _starRating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                      size: appWidth(6),
-                    );
-                  }),
+                RadioListTile<String>(
+                  title: Text('name'.tr()),
+                  value: 'name',
+                  groupValue: _selectedSortBy,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedSortBy = value;
+                    });
+                  },
                 ),
-                SizedBox(width: appWidth(4)),
-                Expanded(
-                  child: Text(
-                    '${_starRating.toInt()} stars',
-                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.hintColor, fontSize: appWidth(3.8)),
-                  ),
+                RadioListTile<String>(
+                  title: Text('price'.tr()),
+                  value: 'price',
+                  groupValue: _selectedSortBy,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedSortBy = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  title: Text('created_at'.tr()),
+                  value: 'created_at',
+                  groupValue: _selectedSortBy,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedSortBy = value;
+                    });
+                  },
                 ),
               ],
             ),
-            SizedBox(height: appHeight(4)),
-
-            Text(
-              'others'.tr(),
-              style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(4.5)),
-            ),
             SizedBox(height: appHeight(2)),
 
-            FilterOptionWidget(
-              icon: Icons.discount_outlined,
-              text: 'discount'.tr(),
-              initialValue: _discountSelected,
-              onChanged: (newValue) {
-                setState(() {
-                  _discountSelected = newValue;
-                });
-                print('Discount: $_discountSelected');
-              },
+            Text(
+              'sortOrder'.tr(),
+              style: theme.textTheme.headlineMedium?.copyWith(fontSize: appWidth(4.5)),
             ),
-            FilterOptionWidget(
-              icon: Icons.local_shipping_outlined,
-              text: 'freeShipping'.tr(),
-              initialValue: _freeShippingSelected,
-              onChanged: (newValue) {
-                setState(() {
-                  _freeShippingSelected = newValue;
-                });
-                print('Free shipping: $_freeShippingSelected');
-              },
-            ),
-            FilterOptionWidget(
-              icon: Icons.delivery_dining_outlined,
-              text: 'sameDayDelivery'.tr(),
-              initialValue: _sameDayDeliverySelected,
-              onChanged: (newValue) {
-                setState(() {
-                  _sameDayDeliverySelected = newValue;
-                });
-                print('Same day delivery: $_sameDayDeliverySelected');
-              },
+            SizedBox(height: appHeight(1)),
+            Column(
+              children: [
+                RadioListTile<String>(
+                  title: Text('asc'.tr()),
+                  value: 'asc',
+                  groupValue: _selectedSortOrder,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedSortOrder = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  title: Text('desc'.tr()),
+                  value: 'desc',
+                  groupValue: _selectedSortOrder,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedSortOrder = value;
+                    });
+                  },
+                ),
+              ],
             ),
             SizedBox(height: appHeight(4)),
 
@@ -193,9 +260,7 @@ class _ApplyFiltersPageState extends State<ApplyFiltersPage> {
               height: appHeight(7),
               child: ButtonWidget(
                 text: 'applyFilter'.tr(),
-                onPressed: () {
-                  print('Apply filter tapped');
-                },
+                onPressed: _applyFilters,
               ),
             ),
           ],
