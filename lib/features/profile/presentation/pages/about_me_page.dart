@@ -120,13 +120,13 @@ class _AboutMePageState extends State<AboutMePage> {
     if (_newPasswordController.text.isNotEmpty || _confirmPasswordController.text.isNotEmpty) {
       if (_newPasswordController.text != _confirmPasswordController.text) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('newPasswordsDoNotMatch'.tr())), // Lokalizatsiya
+          SnackBar(content: Text('newPasswordsDoNotMatch'.tr())),
         );
         return;
       }
       if (_currentPasswordController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('enterCurrentPassword'.tr())), // Lokalizatsiya
+          SnackBar(content: Text('enterCurrentPassword'.tr())),
         );
         return;
       }
@@ -134,7 +134,6 @@ class _AboutMePageState extends State<AboutMePage> {
 
     context.read<UserProfileBloc>().add(
       UpdateUserProfile(
-        // 'name' o'rniga 'first_name' va 'last_name' ishlatamiz
         first_name: _firstNameController.text.trim(),
         last_name: _lastNameController.text.trim().isNotEmpty ? _lastNameController.text.trim() : null,
         email: _emailController.text.trim(),
@@ -172,25 +171,17 @@ class _AboutMePageState extends State<AboutMePage> {
         listener: (context, state) {
           if (state is UserProfileLoaded) {
             _populateFields(state.user);
-            // Agar rasm serverdan kelgan bo'lsa va lokal o'zgartirilmagan bo'lsa
-            // _selectedImageFile ni null qilish kerak bo'lishi mumkin,
-            // aks holda har doim lokal tanlangan rasm ko'rinadi.
-            // Yoki, UserProfileLoaded da _selectedImageFile ni tozalash:
-            // setState(() {
-            //   _selectedImageFile = null;
-            // });
           } else if (state is UserProfileError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('${'errorPrefix'.tr()}: ${state.message}'.tr())), // Lokalizatsiya
+              SnackBar(content: Text('${'errorPrefix'.tr()}: ${state.message}'.tr())),
             );
           } else if (state is UserProfileUpdateSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message.tr())), // Bu xabar serverdan kelishi kerak
+              SnackBar(content: Text(state.message.tr())),
             );
-            // Yangilangan ma'lumotlarni darhol ko'rsatish uchun
             _populateFields(state.props as UserEntities);
             setState(() {
-              _selectedImageFile = null; // Saqlangandan keyin tanlangan rasmni tozalash
+              _selectedImageFile = null;
             });
           }
         },
@@ -204,7 +195,6 @@ class _AboutMePageState extends State<AboutMePage> {
 
 
           if (state is UserProfileLoading && _firstNameController.text.isEmpty) {
-            // Agar birinchi marta yuklanayotgan bo'lsa
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -221,7 +211,7 @@ class _AboutMePageState extends State<AboutMePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center( // Rasmni markazga joylash
+                Center(
                   child: Stack(
                     alignment: Alignment.bottomRight,
                     children: [
@@ -372,7 +362,7 @@ class _AboutMePageState extends State<AboutMePage> {
                 ),
                 SizedBox(height: appHeight(4)),
 
-                if (state is UserProfileLoading && _firstNameController.text.isNotEmpty) // Yoki boshqa shart
+                if (state is UserProfileLoading && _firstNameController.text.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.only(bottom: appHeight(2)),
                     child: const Center(child: CircularProgressIndicator()),
@@ -383,10 +373,10 @@ class _AboutMePageState extends State<AboutMePage> {
                   height: appHeight(7),
                   child: ButtonWidget(
                     text: 'saveSettings'.tr(),
-                    onPressed: (state is UserProfileLoading) ? null : _onSaveSettings, // Faqat UserProfileLoading bo'lmaganda aktiv
+                    onPressed: (state is UserProfileLoading) ? null : _onSaveSettings,
                   ),
                 ),
-                SizedBox(height: appHeight(2)), // Pastki qismda joy qoldirish
+                SizedBox(height: appHeight(2)),
               ],
             ),
           );
